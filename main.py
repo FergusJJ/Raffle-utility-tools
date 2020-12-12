@@ -37,11 +37,21 @@ def start():
     elif str(WWYLTD) == '2':
         return 2
 
-if __name__ == '__main__':
-    
+def main_wrapper():
+    os.system('cls')
+    global menu
     menu = Menu('main')
     start_running = start()
     if start_running == 1:
         menu.start_mail_menu()
     elif start_running == 2:
         menu.set_defalut_menu()
+
+if __name__ == '__main__':
+    main_wrapper()
+'''    menu = Menu('main')
+    start_running = start()
+    if start_running == 1:
+        menu.start_mail_menu()
+    elif start_running == 2:
+        menu.set_defalut_menu()'''

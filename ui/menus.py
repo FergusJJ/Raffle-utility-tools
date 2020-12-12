@@ -48,7 +48,9 @@ class Menu:
         change_json_settings_success = colored(Menu.timestamp+'Successfully Changed Defaults...',color='green')
         print(change_json_settings_success)
         time.sleep(1)
-        exec('main.py')
+        import main
+        main.main_wrapper()
+        
 
     def start_mail_menu(self):
         with open('user_settings/defaults.json') as f:

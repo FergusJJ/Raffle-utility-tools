@@ -8,6 +8,9 @@ from datetime import timezone
 sys.path.append('.')
 from ui.colors import Style
 
+def callback_func(callback):
+        callback()
+
 class Mail():
     timestamp = time.strftime('%H:%M:%S')
     logging_in_error = colored(timestamp+'Something went wrong', color='red')
@@ -44,7 +47,8 @@ class Mail():
                         if await_input:
                             exept_block = False
                 elif view_settings == '0':
-                    pass
+                    import main
+                    main.main_wrapper()
                 else:
                     print(Mail.not_an_option)
                     pass
