@@ -1,0 +1,480 @@
+b'Delivered-To: fergus2004johnson@gmail.com\r\nReceived: by 2002:a4f:e484:0:0:0:0:0 with SMTP id a4csp2969585ivn;\r\n        Sun, 15 Nov 2020 13:14:32 -0800 (PST)\r\nX-Google-Smtp-Source: ABdhPJziPKUc3+c6/ZDekfaKOqeFJ1BCioCxlU/hX0PB0Tf6nGEh3yHUurF09jLR1xqy7wwSOcln\r\nX-Received: by 2002:a65:53c8:: with SMTP id z8mr10774144pgr.264.1605474871909;\r\n        Sun, 15 Nov 2020 13:14:31 -0800 (PST)\r\nARC-Seal: i=1; a=rsa-sha256; t=1605474871; cv=none;\r\n        d=google.com; s=arc-20160816;\r\n        b=YO5KYsbRBi2l5l+P+VtusySTcKxH84H1WybkwkppZx8XIyWN3BXm4iS8X+US93/Gdl\r\n         wnyULgxJLm4APlhbBrjRusvfFEZNajJO/Gnj6O/8kAO7qsnTK+xOpGScaVGVetKZ+Vj/\r\n         dVts8fiRaImcSP8SjqfYqkzMMFLgIQQeiL/Eybugll4OkxTJufZm1uzPyHVCgk+IpqgH\r\n         quMV9QXwxOJuSs9DyEbRjvckhtyfEN70jFuo9/qL+uJV4vjNrMerzBamAzoCda2rHXBr\r\n         nOMSjxCRAZJPtYlO6EIEmlCglXkw0/uGjHv4BhWUO3nbg4XIsirkxV9GEB4E1tfLM2S2\r\n         wTww==\r\nARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;\r\n        h=mime-version:subject:message-id:to:from:date:dkim-signature\r\n         :dkim-filter;\r\n        bh=kjl+Yd7h4CRJggtpEN5tUrfJzJqyQDBOdcWP1YM5V1c=;\r\n        b=K4huUlTtkFnEci/S+H4L49saBJzNs/eULPf0wUPjww658gNXOcjmX73hbWmk3Qflly\r\n         r3mJfR61aeD7MzFv6OvQNBM4h1vnR5o89bp6MgXRqkBdAVlyJRQbTjDer5Ql/0GHBJ/a\r\n         wmHSvXB9OzOUnHbWld64ICzjv9dHF5H+GKbpXhQ849SmHEjGCiv8YfrIAETLUjV+0KnP\r\n         0bBLt+QTqvRwLjArLjySHZvkRDUVaqidGuWjpsWKcWeJS6Y3j/VBBKZ/bTO3evdD8OFR\r\n         cg+EKMBbJwpXV+dA9nZcpu5/RkNOlL7Ji0CWrJYUovWQk+5rHV7UsdmThNh3PGvZ+z1N\r\n         3I8w==\r\nARC-Authentication-Results: i=1; mx.google.com;\r\n       dkim=pass header.i=@registrar-servers.com header.s=default header.b=FhWVnBHn;\r\n       spf=pass (google.com: domain of srs0=g8/w=ev=footlocker.eu=questions_en@eforward3c.registrar-servers.com designates 38.101.213.206 as permitted sender) smtp.mailfrom="SRS0=g8/W=EV=footlocker.eu=questions_en@eforward3c.registrar-servers.com";\r\n       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=footlocker.eu\r\nReturn-Path:
+<srs0=g8 w="EV=footlocker.eu=questions_en@eforward3c.registrar-servers.com">
+ \r\nReceived: from eforward3c.registrar-servers.com (eforward3c.registrar-servers.com. [38.101.213.206])\r\n        by mx.google.com with ESMTPS id x133si13947296pfc.260.2020.11.15.13.14.31\r\n        for
+ <fergus2004johnson@gmail.com>
+  \r\n        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);\r\n        Sun, 15 Nov 2020 13:14:31 -0800 (PST)\r\nReceived-SPF: pass (google.com: domain of srs0=g8/w=ev=footlocker.eu=questions_en@eforward3c.registrar-servers.com designates 38.101.213.206 as permitted sender) client-ip=38.101.213.206;\r\nAuthentication-Results: mx.google.com;\r\n       dkim=pass header.i=@registrar-servers.com header.s=default header.b=FhWVnBHn;\r\n       spf=pass (google.com: domain of srs0=g8/w=ev=footlocker.eu=questions_en@eforward3c.registrar-servers.com designates 38.101.213.206 as permitted sender) smtp.mailfrom="SRS0=g8/W=EV=footlocker.eu=questions_en@eforward3c.registrar-servers.com";\r\n       dmarc=fail (p=NONE sp=NONE dis=NONE) header.from=footlocker.eu\r\nReceived: from asp-relay.et.namecheap.tech (eforward2.registrar-servers.com [162.255.118.52])\r\n\tby eforward3c.registrar-servers.com (Postfix) with ESMTP id 8E7D76008CD3\r\n\tfor
+  <yhmtduto745437@fergusjohn.com>
+   ; Sun, 15 Nov 2020 16:14:30 -0500 (EST)\r\nDKIM-Filter: OpenDKIM Filter v2.11.0 eforward3c.registrar-servers.com 8E7D76008CD3\r\nDKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n\td=registrar-servers.com; s=default; t=1605474870;\r\n\tbh=kjl+Yd7h4CRJggtpEN5tUrfJzJqyQDBOdcWP1YM5V1c=;\r\n\th=Date:From:To:Subject;\r\n\tb=FhWVnBHnNqGOv2wl5qs3c57trLg335NwKLKPx8F8NbBe8PE/MXF61rdvOOokxdY3Y\r\n\t c8cPSuY3cj2LCxUZ9Fe4rM2y14CUexEG+oCRv1TKUkKaUh947Y8V3OGmE79kSzyIIl\r\n\t nfd+tLbVtSqeqz52sOZfCchGhqK6XrTYiWzAkN+E=\r\nReceived: from mail01.noris.net (mail01.noris.net [62.128.1.221])\r\n\t(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))\r\n\t(No client certificate requested)\r\n\tby asp-relay.et.namecheap.tech (Postfix) with ESMTPS id 4CZ4hh6Qp2zCqkH\r\n\tfor
+   <yhmtduto745437@fergusjohn.com>
+    ; Sun, 15 Nov 2020 21:14:23 +0000 (UTC)\r\nReceived: from c1547-2.gate.noris.net ([213.95.84.164] helo=app01rp.dmc-footlocker.noris.de)\r\n\tby mail01.noris.net with esmtp (Exim)\r\n\t(envelope-from
+    <questions_en@footlocker.eu>
+     )\r\n\tid 1kePLq-000262-HW\r\n\tfor yhmtduto745437@fergusjohn.com; Sun, 15 Nov 2020 22:14:22 +0100\r\nReceived: from app01rp.dmc-footlocker.noris.de (localhost [127.0.0.1])\r\n\tby app01rp.dmc-footlocker.noris.de (Postfix) with ESMTP id 740723C01C\r\n\tfor
+     <yhmtduto745437@fergusjohn.com>
+      ; Sun, 15 Nov 2020 22:14:22 +0100 (CET)\r\nDate: Sun, 15 Nov 2020 22:14:22 +0100 (CET)\r\nFrom: Foot Locker Europe
+      <questions_en@footlocker.eu>
+       \r\nTo: yhmtduto745437@fergusjohn.com\r\nMessage-ID: &lt;617399079.2903.1605474862474.JavaMail.isas1@app01rp&gt;\r\nSubject: Welcome to Foot Locker!\r\nMIME-Version: 1.0\r\nContent-Type: multipart/related; \r\n\tboundary="----=_Part_2902_1573818854.1605474862473"\r\nX-Noris-IP: 213.95.84.164\r\n\r\n------=_Part_2902_1573818854.1605474862473\r\nContent-Type: text/html; charset="utf-8"\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n\r\n\r\n
+       <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org=\r\n/TR/xhtml1/DTD/xhtml1-strict.dtd">
+       \r\n
+       <html xmlns='3D"http://www.w3.org/1999/xhtml"'>
+        \r\n
+        <head>
+         \r\n=09
+         <meta content='3D"width=3Ddevice-width,' initial-scale='\r\n=3D1.0"/' name='3D"viewport"'/>
+         \r\n=09
+         <meta charset="utf-8" content='3D"text/html;' http-equiv='3D"Content-Type"'>
+          \r\n=09\r\n=09
+          <title>
+           Thank you for your registration.
+          </title>
+          \r\n
+          <!-- [developer comments] special container for outlook and lotus notes=\r\n-->
+          \r\n
+          <!--[if gte mso 9 | IE]>\r\n    <style>\r\n        .outlook_container {\r\n            width: 600px !important;\r\n            max-width: 600px !important;\r\n        }\r\n    </style>\r\n    <![endif]-->
+          \r\n\r\n
+          <style type='3D"text/css"'>
+           \r\n        /*\r\n         * Based on mailchimp email blueprints:=20\r\n         *     - https://github.com/mailchimp/email-blueprints/\r\n         */\r\n\r\n\r\n        /* CLIENT SPECIFIC STYLES=20\r\n         ******************************************************************=\r\n***/\r\n\r\n        /* Force Outlook to provide a "view in browser" message */\r\n\r\n        #outlook a {\r\n            padding: 0;=20\r\n        }=20\r\n\r\n       =20\r\n        /* Force Hotmail to display emails at full width */\r\n\r\n        .ReadMsgBody {\r\n            width: 100%;\r\n        }=20\r\n\r\n        .ExternalClass {=20\r\n            width: 100%;\r\n        }=20\r\n       =20\r\n\r\n        /* Force Hotmail to display normal line spacing */\r\n\r\n        .ExternalClass,=20\r\n        .ExternalClass p,=20\r\n        .ExternalClass span,=20\r\n        .ExternalClass font,=20\r\n        .ExternalClass td,=20\r\n        .ExternalClass div {\r\n            line-height: 100%;\r\n        }=20\r\n       =20\r\n\r\n        /* Prevent WebKit and Windows mobile changing default text sizes */=\r\n   =20\r\n\r\n        body,=20\r\n        table,=20\r\n        td,=20\r\n        p,=20\r\n        a,=20\r\n        li,=20\r\n        blockquote {\r\n            -webkit-text-size-adjust: 100%;=20\r\n            -ms-text-size-adjust: 100%;\r\n        }=20\r\n       =20\r\n\r\n        /* Remove spacing between tables in Outlook 2007 and up */\r\n\r\n        table,=20\r\n        td {\r\n            mso-table-lspace: 0pt;=20\r\n            mso-table-rspace: 0pt;=20\r\n        }=20\r\n       =20\r\n\r\n        /* Allow smoother rENDering of resized image in Internet Explorer *=\r\n/   =20\r\n\r\n        img {\r\n            -ms-interpolation-mode:bicubic;\r\n        } =20\r\n\r\n\r\n\r\n        /* RESET STYLES\r\n         ******************************************************************=\r\n***/\r\n\r\n        body {\r\n            margin: 0;=20\r\n            padding: 0;\r\n        }\r\n        =20\r\n        img {\r\n            border: 0;=20\r\n            height: auto;=20\r\n            line-height: 100%;=20\r\n            outline: none;=20\r\n            text-decoration: none;\r\n        }\r\n       =20\r\n        table {\r\n            border-collapse: collapse !important;\r\n        }\r\n       =20\r\n        body {\r\n            height: 100% !important;=20\r\n            margin: 0;=20\r\n            padding: 0;=20\r\n            width: 100% !important;\r\n            min-width: 100% !important;=20\r\n        }\r\n\r\n\r\n\r\n        /* CLIENT SPECIFIC MOBILE STYLES\r\n         ******************************************************************=\r\n***/\r\n\r\n        @media only screen and (max-width: 600px) {\r\n\r\n            /* Prevent Webkit platforms from changing default text sizes */\r\n\r\n            body,=20\r\n            table,=20\r\n            td,=20\r\n            p,=20\r\n            a,=20\r\n            li,=20\r\n            blockquote {\r\n                -webkit-text-size-adjust: none !important;\r\n            }=20\r\n\r\n\r\n            /* Prevent iOS Mail from adding padding to the body */\r\n\r\n            body {=20\r\n                width: 100% !important;=20\r\n                min-width: 100% !important;\r\n            }=20\r\n        }\r\n\r\n\r\n        /* CUSTOM MOBILE STYLES\r\n         ******************************************************************=\r\n***/\r\n\r\n        @media only screen and (max-width: 350px) {\r\n            .fl-email--header {\r\n                padding-top: 20px !important;\r\n                padding-bottom: 26px !important;\r\n            }\r\n\r\n            .fl-email--header--logo {\r\n                width: 112px !important;\r\n                height: auto !important;\r\n            }\r\n\r\n            .fl-email--service--block {\r\n                padding-top: 36px !important;\r\n            }\r\n\r\n            .fl-email--service--item,\r\n            .fl-email--service--item .col {\r\n                display: block !important;\r\n                width: 100% !important;\r\n            }\r\n\r\n            .fl-email--service--item--button {\r\n                padding: 12px 5px 10px !important;\r\n            }\r\n           =20\r\n            /* OMS\r\n            .fl-email--service--item{\r\n                border-top: 1px solid #ffffff !important;\r\n            }\r\n\r\n            .fl-email--service--item td {\r\n                padding-bottom: 5px !important;\r\n            }\r\n\r\n            .fl-email--service--container{\r\n                border: none !important;\r\n            }\r\n            */\r\n        }\r\n\r\n        @media only screen and (min-width: 351px) {\r\n            .fl-email--service--item,\r\n            .fl-email--service--item .col {\r\n                width: 33% !important;\r\n            }\r\n        }       =20\r\n\r\n        @media only screen and (max-width: 481px) {\r\n            .fl-email--template {\r\n                width: 600px !important;\r\n            }\r\n        }\r\n\r\n        @media only screen and (max-width: 600px) {\r\n            .fl-email--template,\r\n            .outlook_container {\r\n                width: 100% !important;\r\n            }\r\n        }\r\n
+          </style>
+          \r\n
+         </meta>
+        </head>
+        \r\n
+        <body=20\r\nleftmargin=3d"0"=20\r\nmarginwidth=3d"0"=20\r\ntopmargin=3d"0"=20\r\nmarginheight=3d"0"=20\r\noffset=3d"0"=20\r\nstyle=3d"margin: #353132;="" #ffffff;="" -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0;="" 100%;="" 100%;"\r\n="" 600px="\r\n;" arial,="" background-color:="\r\n" color:="" font-family:="" height:="" min-width:="" padding:="" roboto,="" sans-serif;="" width:="">
+         =20\r\n
+         <center>
+          \r\n
+          <table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"100%"=20\r\nheight=3d"100%"=20\r\nalign=3d"center"=20\r\nstyle=3d"margin: !important;"\r\n="" #353132;="" -ms="\r\n-text-size-adjust:" -webkit-text-size-adjust:="" 0;="" 0pt;="" 100%;="" arial,="" bord="\r\ner-collapse:" collapse="" color:="" font-family:="" height:="" mso-table-lspace:="" mso-table-rspace:="" padding:="" rob="\r\noto," sans-serif;="" width:="">
+           \r\n
+           <tr>
+            \r\n
+            <td=20\r\nalign=3d"center"=20\r\nvalign=3d"top"=20\r\nbgcolor=3d"#ffffff"\r\nstyle=3d"margin: -ms-text-size-adjust:="" -webkit-text-siz="\r\ne-adjust:" 0;="" 0pt;="" 0pt;"\r\n="" 100%;="" height:="" mso-tabl="\r\ne-rspace:" mso-table-lspace:="" padding:="" width:="">
+             \r\n
+             <!-- [developer comments] special container for outlook and lotus notes-->
+             \r\n
+             <!--[if gte mso 9 | IE]>\r\n<table border=3D"0" cellpadding=3D"0" cellspacing=3D"0" class=3D"outlook_co=\r\nntainer">\r\n<tr>\r\n<td align=3D"center" valign=3D"top">\r\n<![endif]-->
+             \r\n
+             <!-- BEGIN MAIN TEMPLATE -->
+             \r\n
+             <table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"600"=20\r\nclass=3d"fl-email--template"\r\nstyle=3d"max-width: !important;="" !important;"="20\r\n" -ms-t="\r\next-size-adjust:" -webkit-text-size-adjust:="" 0pt;="" 100%;="" 600px="" border="\r\n-collapse:" collapse="" mso-table-lspace:="" mso-table-rspace:="">
+              =20\r\n
+              <!-- -------------------------------------------------- -->
+              \r\n
+              <!-- START MAIN TEMPLATE CONTENT -->
+              \r\n
+              <!-- -------------------------------------------------- -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <!-- BEGIN HEADER BLOCK                            =\r\n -->
+              \r\n
+              <!-- you should always keep this block             =\r\n -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n\r\n
+              <tr>
+               \r\n
+               <td=20\r\n -ms-text-size-adjust:="" -webkit-te="\r\nxt-size-adjust:" 0="" 0;="" 0pt;="" 0pt;"="20\r\n" 100%;="" 29px="" 35px="" align='3D"center"=20\r\n' class='3D"fl-email--header"=20\r\n' ms="\r\no-table-rspace:" mso-table-lspace:="" style='3D"padding:' valign='3D"top"=20\r\n'>
+                \r\n
+                <!-- BEGIN HEADER CONTENT -->
+                \r\n
+                <table=20\r\n !important;"="20\r\n" -ms-text-size-adjust:="" 0pt;="\r\n" 100%="\r\n;" 100%;="" border='3D"0"=20\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-lspace:="" mso-table-rspace:="" style='3D"-webkit-text-size-adjust:' width='3D"100%"=20\r\n'>
+                 \r\n\r\n
+                 <!-- BEGIN Logo Row -->
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td=20\r\n -ms-text-size-adjust:="" 0pt;="" 0pt;"="20\r\n" 100%;="" align='3D"center"=20\r\n' mso-table-lspace:="" mso-table-rspa="\r\nce:" style='3D"-webkit-text-size-adju=\r\nst:' valign='3D"top"=20\r\n'>
+                   \r\n
+                   <img=20\r\n #666666;="" -ms-inter="\r\npolation-mode:" 0;="" 100%;="" 12px;="" alt='3D"Footlocker"=20\r\n' auto;="" bicubic;="" block;="" border='3D"0"\r\n' border:="" class='3D"fl-email--header--=\r\nlogo"=20\r\n' color:="" font-size:="" height='3D"84"\r\n' height:="" line-height:="" none;="" none;"\r\n="" outline="\r\n:" pa="\r\ndding:" src='3D"http://runnerspoint.=\r\nscene7.com/is/image/rpe/footlocker-email-logo-600?fmt=3Dpng-alpha"=20\r\n' style='3D"display:' text-decoration:="" width='3D"138"\r\n'>
+                   </img=20\r\n>
+                   \r\n
+                   \r\n
+                  </td=20\r\n>
+                 </tr>
+                 \r\n
+                 <!-- END Logo Row -->
+                 \r\n\r\n
+                 \r\n
+                 <!-- // END HEADER CONTENT -->
+                 \r\n
+                 \r\n
+                </table=20\r\n>
+               </td=20\r\n>
+              </tr>
+              \r\n
+              <!-- // END HEADER BLOCK -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <!-- BEGIN INTRO TEXT BLOCK -->
+              \r\n
+              <!-- You should always have an intro text -->
+              \r\n
+              <!-- ---------------------------------------------- -->
+              <tr>
+               \r\n
+               <td\r\nalign=3d"left"=20\r\nvalign=3d"top"=20\r\nstyle=3d"padding-top: -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0;="" 0pt;="" 0pt;"\r\n="" 100%;="" 12px;="" 6px;="" mso="\r\n-table-lspace:" mso-table-rspace:="" padding-="\r\nleft:" padding-bottom:="" padding-right:="">
+                \r\n
+                <!-- BEGIN INTRO TEXT CONTENT -->
+                \r\n
+                <table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"100%"=20\r\nstyle=3d"-webkit-text-size-adjust: !importan='\r\nt;"=20\r\n' -ms-text-size-adjust:="" 0pt;="" 100%;="" border-collapse:="" collapse="" mso-ta="\r\nble-lspace:" mso-table-rspace:="">
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td=20\r\nalign=3d"left"=20\r\nvalign=3d"top"=20\r\nstyle=3d"font-size: #353132;="" -ms-text-size-adj="\r\nust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 14px;="" 20px;="" arial,="" color:="" font-family:="" line-height:="" mso-table-lspace:="" mso-table-rspace:="" r="\r\noboto," sans-serif;="">
+                   <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" 24px;="" line-height:="">
+                    Dear ferguss,
+                    <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" line-height:="">
+                     Thanks for registering an account on
+                     <a href='3D"footlocker.eu"'>
+                      footlocker.=\r\neu
+                     </a>
+                     ! We are the hottest hub for the latest sneaker releases in Europe. S=\r\ntart using your account now and discover its many benefits!
+                     \r\n
+                     <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" line-height:="">
+                      For your protection, your new account has been locked.
+                      <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" line-height:="">
+                       Please use the link below to unlock your account.
+                       \r\n
+                       <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" line-height:="">
+                        \r\n
+                        <a=20\r\nrel=3d"nofollow"\r\nhref=3d"https: #01a1df;="" -webkit-text-size-adjust:="" 100%;"\r\n="" 100%;-ms-text-size-adjus="\r\nt:" fle="" footlocker-footlocker_g='\r\nB-Site/en_GB/-/GBP/ViewUserAccountActivation-ActivateAccount?Login=3Dyhmtdu=\r\nto745437%40fergusjohn.com&amp;Hash=3D38064806-f6d3-49c1-af6a-1852edb10f3b"\r\ntarget=3D"_blank"=20\r\nstyle=3D"color:' intershop="" web="" www.footlocker.eu="">
+                         Unlock your account
+                         \r\n
+                         \r\n
+                         <p=20\r\nstyle=3d"margin-bottom: -webkit-text-size-adjust:="\r\n100%;-ms-text-size-adjust:" 100%;"\r\n="" 20px;="" line-height:="">
+                          Best regards,
+                          <br/>
+                          Foot Locker Europe
+                          \r\n
+                          \r\n
+                         </p=20\r\nstyle=3d"margin-bottom:>
+                        </a=20\r\nrel=3d"nofollow"\r\nhref=3d"https:>
+                       </p=20\r\nstyle=3d"margin-bottom:>
+                      </p=20\r\nstyle=3d"margin-bottom:>
+                     </p=20\r\nstyle=3d"margin-bottom:>
+                    </p=20\r\nstyle=3d"margin-bottom:>
+                   </p=20\r\nstyle=3d"margin-bottom:>
+                  </td=20\r\nalign=3d"left"=20\r\nvalign=3d"top"=20\r\nstyle=3d"font-size:>
+                 </tr>
+                 \r\n
+                 \r\n
+                 <!-- END INTRO TEXT CONTENT -->
+                 \r\n
+                 \r\n
+                </table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"100%"=20\r\nstyle=3d"-webkit-text-size-adjust:>
+               </td\r\nalign=3d"left"=20\r\nvalign=3d"top"=20\r\nstyle=3d"padding-top:>
+              </tr>
+              \r\n
+              <!-- // END INTRO TEXT BLOCK -->
+              \r\n\r\n\r\n=20\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <!-- BEGIN SERVICE BLOCK                           =\r\n -->
+              \r\n
+              <!-- You should always keep this block             =\r\n -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n\r\n                       =20\r\n\r\n
+              <tr>
+               \r\n
+               <td\r\n -ms-text-size-adjust:="" -webkit-text-="\r\nsize-adjust:" 0="" 0;="" 0pt;="" 0pt;"="20\r\n" 100%;="" 46px="" align='3D"center"=20\r\n' class='3D"fl-email--service--block"=20\r\n' mso-t="\r\nable-rspace:" mso-table-lspace:="" style='3D"padding:' valign='3D"top"=20\r\n'>
+                \r\n
+                <!-- BEGIN SERVICE CONTENT -->
+                \r\n
+                <table=20\r\n !important;"="20\r\n" -ms-text-size-adjust:="" 0pt;="\r\n" 100%="\r\n;" 100%;="" border='3D"0"=20\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-lspace:="" mso-table-rspace:="" style='3D"-webkit-text-size-adjust:' width='3D"100%"\r\n'>
+                 \r\n\r\n
+                 <!-- BEGIN Service Block Headline -->
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td\r\n -ms-text-size-adjust:="" 0pt;="" 0pt;"="20\r\n" 100%;="" align='3D"center"=20\r\n' mso-table-lspace:="" mso-table-rspa="\r\nce:" style='3D"-webkit-text-size-adju=\r\nst:' valign='3D"top"\r\n'>
+                   \r\n                                           =20\r\n
+                   <table\r\n !important;"="20\r\n" -ms-text-size-adjust:="" 0pt;="" 100%;="" border='3D"0"\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-="\r\nrspace:" mso-table-lspace:="" style='3D"-webkit-text-size-=\r\nadjust:' width='3D"100%"=20\r\n'>
+                    \r\n
+                    <tr>
+                     \r\n
+                     <td\r\n -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0;="" 0pt;="" 0pt;"\r\n="" 100%;="" 12px="" align='3D"center"=20\r\n' mso-="\r\ntable-lspace:" mso-table-rspace:="" style='3D"padding:' valign='3D"top"=20\r\n'>
+                      \r\n\r\n
+                      <h2=20\r\n 0;="" 16px;="" arial,="" block;="" bold;="" dinweb-medium,="" font-family:="" font-size:="" font-style:="" font-weight:="" helvetica,="" letter-sp="\r\nacing:" margin:="" normal;="" san='\r\ns-serif;"\r\n' style='3D"displa=\r\ny:'>
+                       \r\n                                                            SERVICE\r\n
+                       \r\n
+                       \r\n
+                      </h2=20\r\n>
+                     </td\r\n>
+                    </tr>
+                    \r\n
+                    \r\n
+                    \r\n
+                   </table\r\n>
+                  </td\r\n>
+                 </tr>
+                 \r\n
+                 <!-- //END Service Block Headline -->
+                 \r\n\r\n
+                 <!-- BEGIN Service Block Links -->
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td\r\n #ffffff;="" -ms-text-size-adjust:="" -webki="\r\nt-text-size-adjust:" 0pt="\r\n;" 0pt;"\r\n="" 100%;="" align='3D"left"=20\r\n' bgcolor='3D"#353132"\r\n' mso-table-lspace:="" mso-table-rspace:="" style='3D"color:' valign='3D"top"\r\n'>
+                   \r\n
+                   <table\r\n !important;"="20\r\n" -ms-text-size-adjust:="" 0pt;="" 100%;="" border='3D"0"\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-="\r\nrspace:" mso-table-lspace:="" style='3D"-webkit-text-size-=\r\nadjust:' width='3D"100%"=20\r\n'>
+                    \r\n
+                    <tr>
+                     \r\n
+                     <td\r\n #ffffff;="" -ms-text-s="\r\nize-adjust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 1px="" 33%;="" align='3D"center"\r\n' class='3D"fl-email--=\r\nservice--item"=20\r\n' mso-table-lspace:="" mso-table-rspace:="" solid="" style='3D"border-top=\r\n:' valign='3D"top"\r\n' width:="">
+                      \r\n
+                      <!--[if IE]>\r\n                                                          <table width=3D"2=\r\n00" style=3D"200px" align=3D"center" cellpadding=3D"5" cellspacing=3D"0" bo=\r\nrder=3D"0">\r\n                                                            <tr>\r\n                                                              <td>\r\n                                                        <![endif]-->
+                      \r\n
+                      <!-- Start Button -=\r\n->\r\n                                                        <table=20\r\n                                                            border=3D"0"=20\r\n                                                            cellspacing=3D"=\r\n0"=20\r\n                                                            cellpadding=3D"=\r\n0"=20\r\n                                                            width=3D"100%"=\r\n=20\r\n                                                            style=3D"-webki=\r\nt-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt=\r\n; mso-table-rspace: 0pt; border-collapse: collapse !important;"=20\r\n                                                        >\r\n                                                            <tr>\r\n                                                                <td=20\r\n                                                                    align=\r\n=3D"center"=20\r\n                                                                    bgcolor=\r\n=3D"#353132"=20\r\n                                                                    class=\r\n=3D"fl-email--service--item--button"=20\r\n                                                                    style=\r\n=3D"padding: 20px 5px 18px; -webkit-text-size-adjust: 100%; -ms-text-size-a=\r\ndjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"=20\r\n                                                                >\r\n                                                                    <a=20\r\n                                                                        hre=\r\nf=3D"https://help.footlocker.eu/hc/en-gb"=20\r\n                                                                        tar=\r\nget=3D"_blank"=20\r\n                                                                        sty=\r\nle=3D"font-size: 12px; font-weight: bold; color: #FFFFFF; text-decoration: =\r\nnone; display: inline-block; font-family: DINWeb-Medium, Helvetica, Arial, =\r\nsans-serif; line-height: 0; -webkit-text-size-adjust: 100%;-ms-text-size-ad=\r\njust: 100%;"\r\n                                                                    >\r\n                                                                        <im=\r\ng=20\r\n                                                                           =\r\n src=3D"http://runnerspoint.scene7.com/is/image/rpe/fl-email-service-faq?fm=\r\nt=3Dpng-alpha"=20\r\n                                                                           =\r\n width=3D"34"=20\r\n                                                                           =\r\n height=3D"40"=20\r\n                                                                           =\r\n border=3D"0"=20\r\n                                                                           =\r\n style=3D"display: block; padding: 0; text-decoration: none; -ms-interpolat=\r\nion-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: non=\r\ne;"\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"NEED HELP?"\r\n                                                                        />=\r\n=20\r\n                                                                       =20\r\n                                                                        <br=\r\n />\r\n\r\n                                                                        <sp=\r\nan\r\n                                                                           =\r\n style=3D"display: inline-block; font-family: DINWeb-Medium, Helvetica, Ari=\r\nal, sans-serif; font-size: 12px; line-height: 16px; color: #FFFFFF; color: =\r\n#FFFFFF !important;"\r\n                                                                        >\r\n                                                                           =\r\n NEED HELP?\r\n                                                                        </s=\r\npan>\r\n                                                                    </a>\r\n                                                                </td>\r\n                                                            </tr>\r\n                                                        </table>\r\n                                                        <!-- // END Button =\r\n-->
+                      \r\n
+                      <!--[if IE]>\r\n                                                              </td>\r\n                                                            </tr>\r\n                                                          </table>\r\n                                                        <![endif]-->
+                      \r\n
+                      \r\n\r\n                                                  =20\r\n\r\n
+                      <td\r\n #ffffff;="" -ms-text-s="\r\nize-adjust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 1px="" 33%;="" align='3D"center"\r\n' class='3D"fl-email--=\r\nservice--item"=20\r\n' mso-table-lspace:="" mso-table-rspace:="" solid="" style='3D"border-top=\r\n:' valign='3D"top"\r\n' width:="">
+                       \r\n
+                       <!--[if IE]>\r\n                                                          <table width=3D"2=\r\n00" style=3D"200px" align=3D"center" cellpadding=3D"5" cellspacing=3D"0" bo=\r\nrder=3D"0">\r\n                                                            <tr>\r\n                                                              <td>\r\n                                                        <![endif]-->
+                       \r\n
+                       <!-- Start Button -=\r\n->\r\n                                                        <table=20\r\n                                                            border=3D"0"=20\r\n                                                            cellspacing=3D"=\r\n0"=20\r\n                                                            cellpadding=3D"=\r\n0"=20\r\n                                                            style=3D"-webki=\r\nt-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt=\r\n; mso-table-rspace: 0pt; border-collapse: collapse !important;"=20\r\n                                                        >\r\n                                                            <tr>\r\n                                                                <td=20\r\n                                                                    align=\r\n=3D"center"=20\r\n                                                                    bgcolor=\r\n=3D"#353132"=20\r\n                                                                    class=\r\n=3D"fl-email--service--item--button"=20\r\n                                                                    style=\r\n=3D"padding: 20px 5px 18px; -webkit-text-size-adjust: 100%; -ms-text-size-a=\r\ndjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"=20\r\n                                                                >\r\n                                                                    <a=20\r\n                                                                        hre=\r\nf=3D"https://www.footlocker.eu/INTERSHOP/web/FLE/Footlocker-Footlocker_GB-S=\r\nite/en_GB/-/GBP/ViewOrders-SimpleOrderSearch"=20\r\n                                                                        tar=\r\nget=3D"_blank"=20\r\n                                                                        sty=\r\nle=3D"font-size: 12px; font-weight: bold; color: #FFFFFF; text-decoration: =\r\nnone; display: inline-block; font-family: DINWeb-Medium, Helvetica, Arial, =\r\nsans-serif; line-height: 0; -webkit-text-size-adjust: 100%;-ms-text-size-ad=\r\njust: 100%;"\r\n                                                                    >\r\n                                                                        <im=\r\ng=20\r\n                                                                           =\r\n src=3D"http://runnerspoint.scene7.com/is/image/rpe/fl-email-service-order-=\r\nstatus?fmt=3Dpng-alpha"=20\r\n                                                                           =\r\n width=3D"34"=20\r\n                                                                           =\r\n height=3D"40"\r\n                                                                           =\r\n border=3D"0"=20\r\n                                                                           =\r\n style=3D"display: block; padding: 0; text-decoration: none; -ms-interpolat=\r\nion-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: non=\r\ne;"\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"ORDER STATU=\r\nS"\r\n                                                                        />=\r\n=20\r\n                                                                       =20\r\n                                                                        <br=\r\n />\r\n\r\n                                                                        <sp=\r\nan\r\n                                                                           =\r\n style=3D"display: inline-block; font-family: DINWeb-Medium, Helvetica, Ari=\r\nal, sans-serif; font-size: 12px; line-height: 16px; color: #FFFFFF; color: =\r\n#FFFFFF !important;"\r\n                                                                        >\r\n                                                                           =\r\n ORDER STATUS\r\n                                                                        </s=\r\npan>\r\n                                                                    </a>\r\n                                                                </td>\r\n                                                            </tr>\r\n                                                        </table>\r\n                                                        <!-- // END Button =\r\n-->
+                       \r\n
+                       <!--[if IE]>\r\n                                                              </td>\r\n                                                            </tr>\r\n                                                          </table>\r\n                                                        <![endif]-->
+                       \r\n
+                       \r\n
+                      </td\r\n>
+                     </td\r\n>
+                    </tr>
+                    \r\n\r\n
+                    <tr>
+                     \r\n
+                     <td\r\n #ffffff;="" -ms-text-s="\r\nize-adjust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 1px="" 33%;="" align='3D"center"\r\n' class='3D"fl-email--=\r\nservice--item"=20\r\n' mso-table-lspace:="" mso-table-rspace:="" solid="" style='3D"border-top=\r\n:' valign='3D"top"\r\n' width:="">
+                      \r\n
+                      <!--[if IE]>\r\n                                                          <table width=3D"2=\r\n00" style=3D"200px" align=3D"center" cellpadding=3D"5" cellspacing=3D"0" bo=\r\nrder=3D"0">\r\n                                                            <tr>\r\n                                                              <td>\r\n                                                        <![endif]-->
+                      \r\n
+                      <!-- Start Button -=\r\n->\r\n                                                        <table=20\r\n                                                            border=3D"0"=20\r\n                                                            cellspacing=3D"=\r\n0"=20\r\n                                                            cellpadding=3D"=\r\n0"=20\r\n                                                            style=3D"-webki=\r\nt-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: 0pt=\r\n; mso-table-rspace: 0pt; border-collapse: collapse !important;"=20\r\n                                                        >\r\n                                                            <tr>\r\n                                                                <td=20\r\n                                                                    align=\r\n=3D"center"=20\r\n                                                                    bgcolor=\r\n=3D"#353132"=20\r\n                                                                    class=\r\n=3D"fl-email--service--item--button"=20\r\n                                                                    style=\r\n=3D"padding: 20px 5px 18px; -webkit-text-size-adjust: 100%; -ms-text-size-a=\r\ndjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"=20\r\n                                                                >\r\n                                                                    <a=20\r\n                                                                        hre=\r\nf=3D"https://www.footlocker.eu/INTERSHOP/web/FLE/Footlocker-Footlocker_GB-S=\r\nite/en_GB/-/GBP/ViewUserAccount-Start"=20\r\n                                                                        tar=\r\nget=3D"_blank"=20\r\n                                                                        sty=\r\nle=3D"font-size: 12px; font-weight: bold; color: #FFFFFF; text-decoration: =\r\nnone; display: inline-block; font-family: DINWeb-Medium, Helvetica, Arial, =\r\nsans-serif; line-height: 0; -webkit-text-size-adjust: 100%;-ms-text-size-ad=\r\njust: 100%;"\r\n                                                                    >\r\n                                                                        <im=\r\ng=20\r\n                                                                           =\r\n src=3D"http://runnerspoint.scene7.com/is/image/rpe/fl-email-service-my-acc=\r\nount?fmt=3Dpng-alpha"=20\r\n                                                                           =\r\n width=3D"33"=20\r\n                                                                           =\r\n height=3D"40"\r\n                                                                           =\r\n border=3D"0"=20\r\n                                                                           =\r\n style=3D"display: block; padding: 0; text-decoration: none; -ms-interpolat=\r\nion-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: non=\r\ne;"\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"MY ACCOUNT"\r\n                                                                        />=\r\n=20\r\n                                                                       =20\r\n                                                                        <br=\r\n />\r\n\r\n                                                                        <sp=\r\nan\r\n                                                                           =\r\n style=3D"display: inline-block; font-family: DINWeb-Medium, Helvetica, Ari=\r\nal, sans-serif; font-size: 12px; line-height: 16px; color: #FFFFFF; color: =\r\n#FFFFFF !important;"\r\n                                                                        >\r\n                                                                           =\r\n MY ACCOUNT\r\n                                                                        </s=\r\npan>\r\n                                                                    </a>\r\n                                                                </td>\r\n                                                            </tr>\r\n                                                        </table>\r\n                                                        <!-- // END Button =\r\n-->
+                      \r\n
+                      <!--[if IE]>\r\n                                                              </td>\r\n                                                            </tr>\r\n                                                          </table>\r\n                                                        <![endif]-->
+                      \r\n
+                      \r\n\r\n                                                 =20\r\n\r\n
+                      <td\r\n #ffffff;="" -ms-text-s="\r\nize-adjust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 1px="" 33%;="" align='3D"center"\r\n' class='3D"fl-email--=\r\nservice--item"=20\r\n' mso-table-lspace:="" mso-table-rspace:="" solid="" style='3D"border-top=\r\n:' valign='3D"top"\r\n' width:="">
+                       \r\n
+                       <!--[if IE]>\r\n                                                          <table width=3D"2=\r\n00" style=3D"200px" align=3D"center" cellpadding=3D"5" cellspacing=3D"0" bo=\r\nrder=3D"0">\r\n                                                            <tr>\r\n                                                              <td>\r\n                                                        <![endif]-->
+                       \r\n
+                       <!-- Start Button -=\r\n->\r\n                                                       =20\r\n                                                       =20\r\n=09                                                        <table=20\r\n=09                                                            border=3D"0"=\r\n=20\r\n=09                                                            cellspacing=\r\n=3D"0"=20\r\n=09                                                            cellpadding=\r\n=3D"0"=20\r\n=09                                                            style=3D"-we=\r\nbkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; mso-table-lspace: =\r\n0pt; mso-table-rspace: 0pt; border-collapse: collapse !important;"=20\r\n=09                                                        >\r\n=09                                                            <tr>\r\n=09                                                                <td=20\r\n=09                                                                    alig=\r\nn=3D"center"=20\r\n=09                                                                    bgco=\r\nlor=3D"#353132"=20\r\n=09                                                                    clas=\r\ns=3D"fl-email--service--item--button"=20\r\n=09                                                                    styl=\r\ne=3D"padding: 20px 5px 18px; -webkit-text-size-adjust: 100%; -ms-text-size-=\r\nadjust: 100%; mso-table-lspace: 0pt; mso-table-rspace: 0pt;"=20\r\n=09                                                                >\r\n=09                                                                    <a=\r\n=20\r\n=09                                                                        =\r\nhref=3D"https://www.footlocker.eu/INTERSHOP/web/FLE/Footlocker-Footlocker_G=\r\nB-Site/en_GB/-/GBP/ViewNewsletter-Start"=20\r\n=09                                                                        =\r\ntarget=3D"_blank"=20\r\n=09                                                                        =\r\nstyle=3D"font-size: 12px; font-weight: bold; color: #FFFFFF; text-decoratio=\r\nn: none; display: inline-block; font-family: DINWeb-Medium, Helvetica, Aria=\r\nl, sans-serif; line-height: 0; -webkit-text-size-adjust: 100%;-ms-text-size=\r\n-adjust: 100%;"\r\n=09                                                                    >\r\n=09                                                                        =\r\n<img=20\r\n=09                                                                        =\r\n    src=3D"http://runnerspoint.scene7.com/is/image/rpe/fl-email-service-new=\r\nsletter?fmt=3Dpng-alpha"=20\r\n=09                                                                        =\r\n    width=3D"34"=20\r\n=09                                                                        =\r\n    height=3D"40"\r\n=09                                                                        =\r\n    border=3D"0"=20\r\n=09                                                                        =\r\n    style=3D"display: block; padding: 0; text-decoration: none; -ms-interpo=\r\nlation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: =\r\nnone;"\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"NEWSLETT=\r\nER SIGN UP"\r\n=09                                                                        =\r\n/>=20\r\n=09                                                                       =\r\n=20\r\n=09                                                                        =\r\n<br />\r\n=09\r\n=09                                                                        =\r\n<span\r\n=09                                                                        =\r\n    style=3D"display: inline-block; font-family: DINWeb-Medium, Helvetica, =\r\nArial, sans-serif; font-size: 12px; line-height: 16px; color: #FFFFFF; colo=\r\nr: #FFFFFF !important;"\r\n=09                                                                        =\r\n>\r\n=09                                                                        =\r\n    NEWSLETTER SIGN UP\r\n=09                                                                        =\r\n</span>\r\n=09                                                                    </a>\r\n=09                                                                </td>\r\n=09                                                            </tr>\r\n=09                                                        </table>\r\n                                                       =20\r\n                                                        <!-- // END Button =\r\n-->
+                       \r\n
+                       <!--[if IE]>\r\n                                                              </td>\r\n                                                            </tr>\r\n                                                          </table>\r\n                                                        <![endif]-->
+                       \r\n
+                       \r\n
+                      </td\r\n>
+                     </td\r\n>
+                    </tr>
+                    \r\n
+                    \r\n
+                    \r\n
+                   </table\r\n>
+                  </td\r\n>
+                 </tr>
+                 \r\n
+                 <!-- // END Service Block Links -->
+                 \r\n\r\n
+                 \r\n
+                 <!-- END SERVICE CONTENT -->
+                 \r\n
+                 \r\n
+                </table=20\r\n>
+               </td\r\n>
+              </tr>
+              \r\n
+              <!-- // END SERVICE BLOCK -->
+              \r\n\r\n\r\n\r\n\r\n\r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <!-- BEGIN SOCIAL MEDIA BLOCK                      =\r\n -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <tr>
+               \r\n
+               <td\r\n -ms-text-size-adjust:="" -webkit-text-si="\r\nze-adjust:" 0pt;="" 0pt;"\r\n="" 100%;="" 34px;="" align='3D"center"=20\r\n' mso-tab="\r\nle-rspace:" mso-table-lspace:="" style='3D"padding-top:' valign='3D"top"=20\r\n'>
+                \r\n
+                <!-- BEGIN SOCIAL MEDIA CONTENT -->
+                \r\n
+                <table=20\r\n !important;"="20\r\n" -ms-text-size-adjust:="" 0pt;="\r\n" 100%="\r\n;" 100%;="" border='3D"0"=20\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-lspace:="" mso-table-rspace:="" style='3D"-webkit-text-size-adjust:' width='3D"100%"=20\r\n'>
+                 \r\n
+                 <!-- BEGIN Social Media Block Headline =\r\n-->
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td\r\n -ms-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" align='3D"center"=20\r\n' mso-table-lspace:="" mso-table-rspa="\r\nce:" style='3D"-webkit-text-size-adju=\r\nst:' valign='3D"top"\r\n'>
+                   \r\n                                           =20\r\n
+                   <table\r\n border='3D"0"\r\n' cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' width='3D"100%"=20\r\n'>
+                    \r\n
+                    <tr>
+                     \r\n
+                     <td\r\n -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0;="" 0pt;="" 0pt;"\r\n="" 100%;="" 16px="" align='3D"center"=20\r\n' mso-="\r\ntable-lspace:" mso-table-rspace:="" style='3D"padding:' valign='3D"top"=20\r\n'>
+                      \r\n\r\n
+                      <h2 0;="" 16px;="" arial,="" block;="" bold;="" dinweb-medium,="" font-family:="" font-size:="" font-style:="" font-weight:="" helvetica,="" letter-sp="\r\nacing:" margin:="" normal;="" san='\r\ns-serif;"' style='3D"displa=\r\ny:'>
+                       \r\n                                                            FOLLOW US=20\r\n
+                      </h2>
+                      \r\n
+                      \r\n
+                     </td\r\n>
+                    </tr>
+                    \r\n
+                    \r\n
+                    \r\n
+                   </table\r\n>
+                  </td\r\n>
+                 </tr>
+                 \r\n
+                 <!-- //END Social Media Block Headline =\r\n-->
+                 \r\n\r\n
+                 <!-- BEGIN Social Media Links -->
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td=20\r\n -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0pt;="" 0pt;"\r\n="" 100%;="" 16px;="\r\nwidth:" 18px="" align='3D"center"=20\r\n' bgcolor='3D"#EBEBEB"\r\n' ms="\r\no-table-lspace:" mso-table-rspace:="" style='3D"padding:' valign='3D"top"=20\r\n'>
+                   \r\n
+                   <!--[if IE]>\r\n                                              <table width=3D"200" align=3D=\r\n"center" cellpadding=3D"5" cellspacing=3D"0" border=3D"0">\r\n                                                <tr>\r\n                                                  <td>\r\n                                            <![endif]-->
+                   \r\n
+                   <table=20\r\n !important;"\r\n="" -ms-text-size-adjust:="" 0pt;="" 100%;="" border='3D"0"=20\r\n' border-collapse:="" cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" mso-table-="\r\nrspace:" mso-table-lspace:="" style='3D"-webkit-text-size-=\r\nadjust:'>
+                    \r\n
+                    <tr>
+                     \r\n=09=09=09=09=09=09=09=09=09=09=09=09=09\r\n=09
+                     <td=20\r\n=09 -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0pt;="" 0pt;"\r\n="09" 100%;="" 15px;="" align='3D"center"=\r\n=20\r\n=09' mso-t="\r\nable-lspace:" mso-table-rspace:="" style='3D"padding=\r\n:' valign='3D"top"=\r\n=20\r\n=09' width='3D"25%"=20\r\n=09'>
+                      \r\n=09
+                      <a=20\r\n=09 -ms-text-size-adjust:="" 100%;="" 100%;"\r\n="09" href='3D"http=\r\ns://www.facebook.com/FootLockerEU"=20\r\n=09' style='3D"-we=\r\nbkit-text-size-adjust:' target='3D"_b=\r\nlank"=20\r\n=09'>
+                       \r\n=09
+                       <img=20\r\n=09 -ms-in="\r\nterpolation-mode:" 0;="" 100%;="" 10px;="" auto;="" bicubic;="" block;="" border='\r\n=3D"0"=20\r\n=09' border:="" font-size:="" height='\r\n=3D"27"=20\r\n=09' height:="" line-height:="" none;="" none;"\r\n='09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"Facebook"\r\n=09' outl="\r\nine:" padding:="" src='3D"h=\r\nttp://runnerspoint.scene7.com/is/image/rpe/fl-email-social-facebook?fmt=3Dp=\r\nng-alpha"=20\r\n=09' style='3D=\r\n"display:' text-decoration:="" width='3D=\r\n"26"\r\n=09'>
+                       </img=20\r\n=09>
+                       =20\r\n=09
+                       \r\n=09
+                       \r\n                                                   =20\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09\r\n=09
+                       <td=20\r\n=09 -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0pt;="" 0pt;"\r\n="09" 100%;="" 15px;="" align='3D"center"=\r\n=20\r\n=09' mso-t="\r\nable-lspace:" mso-table-rspace:="" style='3D"padding=\r\n:' valign='3D"top"=\r\n=20\r\n=09' width='3D"25%"=20\r\n=09'>
+                        \r\n=09
+                        <a=20\r\n=09 -ms-text-size-adjust:="" 100%;="" 100%;"\r\n="09" href='3D"http=\r\ns://www.youtube.com/channel/UCEfZF4FCKWDXv22QOvn6ZPg"=20\r\n=09' style='3D"-we=\r\nbkit-text-size-adjust:' target='3D"_b=\r\nlank"=20\r\n=09'>
+                         \r\n=09
+                         <img=20\r\n=09 -ms-in="\r\nterpolation-mode:" 0;="" 100%;="" 10px;="" auto;="" bicubic;="" block;="" border='\r\n=3D"0"=20\r\n=09' border:="" font-size:="" height='\r\n=3D"27"=20\r\n=09' height:="" line-height:="" none;="" none;"\r\n='09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"YouTube"\r\n=09' outl="\r\nine:" padding:="" src='3D"h=\r\nttp://runnerspoint.scene7.com/is/image/rpe/fl-email-social-youtube?fmt=3Dpn=\r\ng-alpha"=20\r\n=09' style='3D=\r\n"display:' text-decoration:="" width='3D=\r\n"67"\r\n=09'>
+                         </img=20\r\n=09>
+                         \r\n=09
+                         \r\n=09
+                         \r\n                                                   =20\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09\r\n=09
+                         <td=20\r\n=09 -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0pt;="" 0pt;"\r\n="09" 100%;="" 15px;="" align='3D"center"=\r\n=20\r\n=09' mso-t="\r\nable-lspace:" mso-table-rspace:="" style='3D"padding=\r\n:' valign='3D"top"=\r\n=20\r\n=09' width='3D"25%"=20\r\n=09'>
+                          \r\n=09
+                          <a=20\r\n=09 -ms-text-size-adjust:="" 100%;="" 100%;"\r\n="09" href='3D"http=\r\ns://twitter.com/FootLockerEU"=20\r\n=09' style='3D"-we=\r\nbkit-text-size-adjust:' target='3D"_b=\r\nlank"=20\r\n=09'>
+                           \r\n=09
+                           <img=20\r\n=09 -ms-in="\r\nterpolation-mode:" 0;="" 100%;="" 10px;="" auto;="" bicubic;="" block;="" border='\r\n=3D"0"=20\r\n=09' border:="" font-size:="" height='\r\n=3D"24"=20\r\n=09' height:="" line-height:="" none;="" none;"\r\n='09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"Twitter"\r\n=09' outl="\r\nine:" padding:="" src='3D"h=\r\nttp://runnerspoint.scene7.com/is/image/rpe/fl-email-social-twitter?fmt=3Dpn=\r\ng-alpha"=20\r\n=09' style='3D=\r\n"display:' text-decoration:="" width='3D=\r\n"28"\r\n=09'>
+                           </img=20\r\n=09>
+                           \r\n=09
+                           \r\n=09
+                           \r\n                                                   =20\r\n=09=09=09=09=09=09=09=09=09=09=09=09=09\r\n=09
+                           <td=20\r\n=09 -ms-text-size-adjust:="" -webkit-text-size-adjust:="" 0="" 0pt;="" 0pt;"\r\n="09" 100%;="" 15px;="" align='3D"center"=\r\n=20\r\n=09' mso-t="\r\nable-lspace:" mso-table-rspace:="" style='3D"padding=\r\n:' valign='3D"top"=\r\n=20\r\n=09' width='3D"25%"=20\r\n=09'>
+                            \r\n=09
+                            <a=20\r\n=09 100%;"\r\n="09" 100%;-ms-text-size-adjust:="" href='3D"http=\r\n://instagram.com/footlockereu"\r\n=09' style='3D"-we=\r\nbkit-text-size-adjust:' target='3D"_b=\r\nlank"=20\r\n=09'>
+                             \r\n=09
+                             <img=20\r\n=09 -ms-in="\r\nterpolation-mode:" 0;="" 100%;="" 10px;="" auto;="" bicubic;="" block;="" border='\r\n=3D"0"=20\r\n=09' border:="" font-size:="" height='\r\n=3D"26"=20\r\n=09' height:="" line-height:="" none;="" none;"\r\n='09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09=09alt=3D"Instagram"\r\n=09' outl="\r\nine:" padding:="" src='3D"h=\r\nttp://runnerspoint.scene7.com/is/image/rpe/fl-email-social-instagram?fmt=3D=\r\npng-alpha"=20\r\n=09' style='3D=\r\n"display:' text-decoration:="" width='3D=\r\n"26"\r\n=09'>
+                              \r\n=09
+                              \r\n=09
+                              \r\n                                                   =20\r\n
+                             </img=20\r\n=09>
+                            </a=20\r\n=09>
+                           </td=20\r\n=09>
+                          </a=20\r\n=09>
+                         </td=20\r\n=09>
+                        </a=20\r\n=09>
+                       </td=20\r\n=09>
+                      </a=20\r\n=09>
+                     </td=20\r\n=09>
+                    </tr>
+                    \r\n
+                    \r\n
+                    <!--[if IE]>\r\n                                                  </td>\r\n                                                </tr>\r\n                                              </table>\r\n                                            <![endif]-->
+                    =20\r\n
+                    \r\n
+                   </table=20\r\n>
+                  </td=20\r\n>
+                 </tr>
+                 \r\n
+                 <!-- // END Social Media Links -->
+                 \r\n\r\n
+                 \r\n
+                 <!-- END SOCIAL MEDIA CONTENT -->
+                 \r\n
+                 \r\n
+                </table=20\r\n>
+               </td\r\n>
+              </tr>
+              \r\n
+              <!-- // END SOCIAL MEDIA BLOCK -->
+              \r\n\r\n\r\n\r\n\r\n\r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <!-- BEGIN COPYRIGHT NOTICE BLOCK                  =\r\n -->
+              \r\n
+              <!-- You should always keep this block             =\r\n -->
+              \r\n
+              <!-- ----------------------------------------------=\r\n -->
+              \r\n
+              <tr>
+               \r\n
+               <td=20\r\n -m="\r\ns-text-size-adjust:" 0pt;="" 0pt;"\r\n="" 100%;="" mso-table-lspace:="" mso-table-rspace:="" style='3D"-webkit-text-size-adjust:'>
+                \r\n
+                <!-- BEGIN COPYRIGHT CONTENT -->
+                \r\n
+                <table=20\r\n !important;"="20\r\n" 0pt;bor="\r\nder-collapse:" 0pt;mso-table-rspace:="" 100%="\r\n;-ms-text-size-adjust:" 100%;mso-table-lspace:="" border='3D"0"=20\r\n' cellpadding='3D"0"=20\r\n' cellspacing='3D"0"=20\r\n' collapse="" style='3D"-webkit-text-size-adjust:' width='3D"100%"=20\r\n'>
+                 \r\n
+                 <tr>
+                  \r\n
+                  <td\r\n -ms-text-size-a="\r\ndjust:" -webkit-text-size-adjust:="" 0pt;="" 0pt;"\r\n="" 100%;="" 12px="" 12px;="" 25px="" 30p="\r\nx" =20\r\n="" align='3D"center"' arial,="" center;="" dinweb-medium,="" font-family:="" font-size:="" helvetica,="" mso-table-lspace:="" mso-table-rspace:="" sans="\r\n-serif;" style='3D"padding:' text-align:="" valign='3D"top"=20\r\n'>
+                   \r\n
+                   <em 0="" auto;"="" display:="" inline-block;="" margin:="" normal="\r\n;" style='3D"font-style:'>
+                    \r\n=09=09=09=09=09=09=09=09=09=09=09=09\r\n=09=09=09=09=09=09=09=09=09=09=09=09© 2020 Foot Locker. All rights res=\r\nerved.\r\n
+                   </em>
+                   \r\n
+                   \r\n
+                  </td\r\n>
+                 </tr>
+                 \r\n
+                 \r\n
+                 <!-- // END COPYRIGHT CONTENT -->
+                 \r\n
+                 \r\n
+                </table=20\r\n>
+               </td=20\r\n>
+              </tr>
+              \r\n
+              <!-- // END COPYRIGHT NOTICE BLOCK -->
+              \r\n
+              <!-- -------------------------------------------------- -->
+              \r\n
+              <!-- END MAIN TEMPLATE CONTENT -->
+              \r\n
+              <!-- - you shouldn\'t need to edit the code below -->
+              \r\n
+              <!-- -------------------------------------------------- -->
+              \r\n
+              \r\n
+              <!-- // END MAIN TEMPLATE-->
+              \r\n
+              <!-- [developer comments] special container for outlook and lotus notes-->
+              \r\n
+              <!--[if gte mso 9 | IE]>\r\n</td>\r\n</tr>\r\n</table>\r\n<![endif]-->
+              \r\n
+              \r\n
+             </table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"600"=20\r\nclass=3d"fl-email--template"\r\nstyle=3d"max-width:>
+            </td=20\r\nalign=3d"center"=20\r\nvalign=3d"top"=20\r\nbgcolor=3d"#ffffff"\r\nstyle=3d"margin:>
+           </tr>
+           \r\n
+           \r\n
+          </table=20\r\nborder=3d"0"=20\r\ncellpadding=3d"0"=20\r\ncellspacing=3d"0"=20\r\nwidth=3d"100%"=20\r\nheight=3d"100%"=20\r\nalign=3d"center"=20\r\nstyle=3d"margin:>
+         </center>
+         \r\n
+         \r\n
+        </body=20\r\nleftmargin=3d"0"=20\r\nmarginwidth=3d"0"=20\r\ntopmargin=3d"0"=20\r\nmarginheight=3d"0"=20\r\noffset=3d"0"=20\r\nstyle=3d"margin:>
+       </html>
+       \r\n------=_Part_2902_1573818854.1605474862473--\r\n'
+      </questions_en@footlocker.eu>
+     </yhmtduto745437@fergusjohn.com>
+    </questions_en@footlocker.eu>
+   </yhmtduto745437@fergusjohn.com>
+  </yhmtduto745437@fergusjohn.com>
+ </fergus2004johnson@gmail.com>
+</srs0=g8>

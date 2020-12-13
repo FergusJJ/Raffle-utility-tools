@@ -1,6 +1,7 @@
 import imaplib, email, time, sys, json, re
 from termcolor import colored
 import art
+import bs4
 import datetime as dt
 import os
 from datetime import timezone
@@ -19,10 +20,7 @@ class Mail():
     logging_in_error = colored('['+timestamp+']'+' Something went wrong', color='red')
     not_an_option = colored('['+timestamp+']'+' That is not an option...',color='red')
     #default message for after an error has occurred or your task is done
-    def enter_to_contine():
-        await_input = input('Press ENTER to continue...')
-        if bool(await_input) == True:
-            except_block = False
+    
 
     inbox_options = {
             "INBOX":"INBOX",
@@ -45,6 +43,7 @@ class Mail():
         self.login_to_email()
     
     def scrape_inbox(self):
+        self.link_set = set()
         inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
         if inbox_choice == '1':
             self.selected_inbox = Mail.inbox_options["INBOX"]
@@ -57,6 +56,7 @@ class Mail():
         elif inbox_choice == '5':
             self.selected_inbox = Mail.inbox_options["SENT"]
         try:
+            self.substring_filter = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
             self.inbox_found_status, inbox_length = self.login_session.select(self.selected_inbox)
             amount_of_mails = inbox_length[0]
             amount_of_mails = str(amount_of_mails)
@@ -76,16 +76,13 @@ class Mail():
                 import main
                 main.main_wrapper()
             else:
+                self.link_set = set()
                 pattern = '(?P<url>https?://[^\s]+)'
                 prog = re.compile(pattern)
 
-                #message =str(individual_response_data[0][1])
-                    
-               #     print(prog.search(message).group("url"))
-
                 self.amount_matching_criteria = self.amount_matching_criteria[0]
-                self.amount_matching_criteria_str = str(self.amount_matching_criteria)
-                num_mails = re.search(r"\d.+",self.amount_matching_criteria_str)
+                amount_matching_criteria_str = str(self.amount_matching_criteria)
+                num_mails = re.search(r"\d.+",amount_matching_criteria_str)
                 num_mails = ((num_mails.group())[:-1]).split(' ')
     
                 sys.stdout.write(Style.GREEN)
@@ -94,27 +91,35 @@ class Mail():
                 sys.stdout.write(Style.YELLOW)
                 print(f'[{Mail.timestamp}] Found {len(num_mails)} emails')
                 sys.stdout.write(Style.RESET)
-                num_mails = self.amount_matching_criteria.split()
-                for message_num in num_mails:
-                    individual_response_code, individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
-                    message = email.message_from_bytes(individual_response_data[0][1])
-                    if message.is_multipart():
-                        print('multipart')
-
-                        multipart_payload = message.get_payload()
-                        for sub_message in multipart_payload:
-                            string_payload = str(sub_message.get_payload())
-                            print(prog.search(string_payload))
-                    else:
-                        print('not multipart')
+                
+                counter = 0
+                self.start_time = time.time()
+                for message_num in self.amount_matching_criteria.split():
+                    counter += 1
+                    _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
+                    self.raw = email.message_from_bytes(self.individual_response_data[0][1])
+                    raw = self.raw
+                    self.scraped_email_value = email.message_from_bytes(Mail.scrape_email(raw))
+                    self.scraped_email_value = str(self.scraped_email_value)
+                    self.returned_links = prog.findall(self.scraped_email_value)
                   
-                    
-                Mail.enter_to_contine()
+                    for i in self.returned_links:
+                        if self.substring_filter in i:
+                            self.link_set.add(i)
+                self.end_time = time.time()
+                self.time_taken = self.end_time - self.start_time
+
+                sys.stdout.write(Style.YELLOW)
+                print(f'[{Mail.timestamp}] Time taken:{self.time_taken}')
+                sys.stdout.write(Style.RESET)
+                self.write_to_text_file(self.link_set)
+                Mail.enter_to_continue()
                 import main
                 main.main_wrapper()
-        except:
+        except Exception as e:
+            print(e)
             print(Mail.logging_in_error)
-            Mail.enter_to_contine()
+            Mail.enter_to_continue()
             import main
             main.main_wrapper()
 
@@ -129,6 +134,7 @@ class Mail():
             print(f'[{Mail.timestamp}] Successfully Logged in...')
             sys.stdout.write(Style.RESET)
             self.scrape_inbox()
+
         except:
             except_block = True
             print(Mail.logging_in_error)
@@ -139,7 +145,7 @@ class Mail():
                     with open('user_settings/defaults.json','r') as f:
                         check_credentials_file = f.read()
                         print(check_credentials_file)
-                        Mail.enter_to_contine()
+                        Mail.enter_to_continue()
                         import main
                         main.main_wrapper()
                 elif view_settings == '0':
@@ -148,3 +154,24 @@ class Mail():
                 else:
                     print(Mail.not_an_option)
                     pass
+    
+    def write_to_text_file(self,link_set):
+        with open('out.txt','w') as f:
+            f.write(self.link_set)
+            f.close()
+        print(self.link_set)
+
+    @staticmethod
+    def scrape_email(raw):
+        
+        if raw.is_multipart():
+            
+            return Mail.scrape_email(raw.get_payload(0))
+        else:
+            return raw.get_payload(None,True)
+
+    @staticmethod
+    def enter_to_continue():
+        await_input = input('Press ENTER to continue...')
+        if bool(await_input) == True:
+            except_block = False
