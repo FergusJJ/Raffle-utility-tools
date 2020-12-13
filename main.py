@@ -49,9 +49,3 @@ def main_wrapper():
 
 if __name__ == '__main__':
     main_wrapper()
-'''    menu = Menu('main')
-    start_running = start()
-    if start_running == 1:
-        menu.start_mail_menu()
-    elif start_running == 2:
-        menu.set_defalut_menu()'''

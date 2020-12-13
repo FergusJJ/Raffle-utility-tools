@@ -45,7 +45,8 @@ class Menu:
                     set_json = False
                 else:
                     pass
-        change_json_settings_success = colored(Menu.timestamp+'Successfully Changed Defaults...',color='green')
+
+        change_json_settings_success = colored('['+Menu.timestamp+']'+' Successfully Changed Defaults...',color='green')
         print(change_json_settings_success)
         time.sleep(1)
         import main
@@ -60,12 +61,12 @@ class Menu:
         
             
 
-        communicate_choice_status = colored('You selected Mail Scripts\n',color='yellow')
+        communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
         print(communicate_choice_status)
         mail_instance = Mail()
         
         try:
-            print(Menu.timestamp+'You Selected: '+email_address)
+            print('['+Menu.timestamp+']'+' You Selected: '+email_address)
         
         except:
             setup_message = colored('Note: You don\'t have a default email set up, to avoid having to re-type your credentials set one up from the start menu',color='red')
