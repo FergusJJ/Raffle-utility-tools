@@ -156,8 +156,9 @@ class Mail():
                     pass
     
     def write_to_text_file(self,link_set):
-        with open('out.txt','w') as f:
-            f.write(self.link_set)
+        with open('out.txt','a') as f:
+            for i in self.link_set:
+                f.write(i+'\r')
             f.close()
         print(self.link_set)
 
