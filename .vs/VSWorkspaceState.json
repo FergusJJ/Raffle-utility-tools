@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\tools_functions",
-    "\\ui"
+    "\\tools_functions"
   ],
-  "SelectedNode": "\\tools_functions\\out.txt",
+  "SelectedNode": "\\tools_functions\\mail_functions.py",
   "PreviewInSolutionExplorer": false
 }

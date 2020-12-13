@@ -86,14 +86,17 @@ class Mail():
                 num_mails = ((num_mails.group())[:-1]).split(' ')
     
                 sys.stdout.write(Style.GREEN)
-                print(f'[{Mail.timestamp}] Status code of {self.search_mail_status}')
+                self.timestamp = time.strftime('%H:%M:%S')
+                print(f'[{self.timestamp}] Status code of {self.search_mail_status}')
                 sys.stdout.write(Style.RESET)
                 sys.stdout.write(Style.YELLOW)
-                print(f'[{Mail.timestamp}] Found {len(num_mails)} emails')
+                self.timestamp = time.strftime('%H:%M:%S')
+                print(f'[{self.timestamp}] Found {len(num_mails)} emails')
                 sys.stdout.write(Style.RESET)
                 
                 counter = 0
                 self.start_time = time.time()
+                sys.stdout.write(Style.MAGENTA)
                 for message_num in self.amount_matching_criteria.split():
                     counter += 1
                     _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
@@ -106,11 +109,14 @@ class Mail():
                     for i in self.returned_links:
                         if self.substring_filter in i:
                             self.link_set.add(i)
+                    self.timestamp = time.strftime('%H:%M:%S')
+                    print(f'[{self.timestamp}] Links scraped: [{counter}/{len(num_mails)}]')
+                sys.stdout.write(Style.RESET)
                 self.end_time = time.time()
                 self.time_taken = self.end_time - self.start_time
-
                 sys.stdout.write(Style.YELLOW)
-                print(f'[{Mail.timestamp}] Time taken:{self.time_taken}')
+                self.timestamp = time.strftime('%H:%M:%S')
+                print(f'[{self.timestamp}] Time taken:{self.time_taken}')
                 sys.stdout.write(Style.RESET)
                 self.write_to_text_file(self.link_set)
                 Mail.enter_to_continue()
