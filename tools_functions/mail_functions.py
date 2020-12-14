@@ -104,8 +104,9 @@ class Mail():
                     MESSAGES_ARRAY.append(self.individual_response_data)
                     sys.stdout.write(Style.MAGENTA)
                     print(message_num)
+                    print(len(MESSAGES_ARRAY))
                     sys.stdout.write(Style.RESET)
-                    print(MESSAGES_ARRAY)
+                    
                 print(MESSAGES_ARRAY)
                 #
                 self.start_time = time.time()
