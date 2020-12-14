@@ -1,9 +1,12 @@
 class Pool_Executor:
-    
-    def process_pool():
+
+    def __init__(self):
         pass
 
-    def thread_pool():
+    def process_pool(self):
+        pass
+
+    def thread_pool(self):
         pass
 '''
    def get_links_from_email(self,amount_matching_criteria,login_session,substring_filter):
