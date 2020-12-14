@@ -95,23 +95,34 @@ class Mail():
                 sys.stdout.write(Style.RESET)
                 
                 counter = 0
+               
+                       
+
                 self.start_time = time.time()
+
+                #1 task
                 sys.stdout.write(Style.MAGENTA)
-                for message_num in self.amount_matching_criteria.split():
-                    counter += 1
-                    _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
-                    self.raw = email.message_from_bytes(self.individual_response_data[0][1])
-                    raw = self.raw
-                    self.scraped_email_value = email.message_from_bytes(Mail.scrape_email(raw))
-                    self.scraped_email_value = str(self.scraped_email_value)
-                    self.returned_links = prog.findall(self.scraped_email_value)
+                with open('out.txt','a') as f:
+                    for message_num in self.amount_matching_criteria.split():
+                        counter += 1
+                        _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
+                        self.raw = email.message_from_bytes(self.individual_response_data[0][1])
+                        raw = self.raw
+                        self.scraped_email_value = email.message_from_bytes(Mail.scrape_email(raw))
+                        self.scraped_email_value = str(self.scraped_email_value)
+                        self.returned_links = prog.findall(self.scraped_email_value)
                   
-                    for i in self.returned_links:
-                        if self.substring_filter in i:
-                            self.link_set.add(i)
-                    self.timestamp = time.strftime('%H:%M:%S')
-                    print(f'[{self.timestamp}] Links scraped: [{counter}/{len(num_mails)}]')
-                sys.stdout.write(Style.RESET)
+                        for i in self.returned_links:
+                            if self.substring_filter in i:
+                                f.write(i+'\r')
+                                #self.link_set.add(i)
+        
+                        self.timestamp = time.strftime('%H:%M:%S')
+                        print(f'[{self.timestamp}] Links scraped: [{counter}/{len(num_mails)}]')
+                        
+                        sys.stdout.write(Style.RESET)
+                    f.close()
+                #end of task
                 self.end_time = time.time()
                 self.time_taken = self.end_time - self.start_time
                 sys.stdout.write(Style.YELLOW)
@@ -162,12 +173,13 @@ class Mail():
                     pass
     
     def write_to_text_file(self,link_set):
-        with open('out.txt','a') as f:
+        with open(self.file,'a') as f:
             for i in self.link_set:
                 f.write(i+'\r')
             f.close()
         print(self.link_set)
 
+    
     @staticmethod
     def scrape_email(raw):
         
@@ -182,3 +194,23 @@ class Mail():
         await_input = input('Press ENTER to continue...')
         if bool(await_input) == True:
             except_block = False
+    
+class Pool:
+
+    def create_tasks_thread(amount_matching, login_session):
+        futures = []
+        
+        with concurrent.futures.ProcessPoolExecutor() as E:
+            for messages in amount_matching:
+              
+                task_params = API_KEY + specific_params + params + task_specific_proxy
+            
+                print(task_params)
+                futures.append(
+                    E.submit(
+                        function_name, 
+                        *task_params
+                ))
+                proxy_position +=1
+            for future in concurrent.futures.as_completed(futures):
+                print(future.result())
