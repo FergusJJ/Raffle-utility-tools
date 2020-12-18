@@ -1,26 +1,25 @@
-import imaplib, email, time, sys, json, re
+import imaplib, email, time, sys, json, re, os
 from termcolor import colored
 import art
 import bs4
 import datetime as dt
-import os
 from datetime import timezone
+from threading import Timer
+import concurrent.futures
+import multiprocessing
 #
 sys.path.append('.')
 from ui.colors import Style
-
-
 
 class Mail():
     #GENERAL USE VARIABLES
     timestamp = time.strftime('%H:%M:%S')
     CHARSET = None
-
+    shared_links_array = []
     #MESSAGES
     logging_in_error = colored('['+timestamp+']'+' Something went wrong', color='red')
     not_an_option = colored('['+timestamp+']'+' That is not an option...',color='red')
     #default message for after an error has occurred or your task is done
-    
 
     inbox_options = {
             "INBOX":"INBOX",
@@ -34,6 +33,88 @@ class Mail():
 
         self.email_name = email_name
         self.email_password = email_password
+#you cannot reuse ssl socket so you have to create a new login each time
+    
+    def scrape_link_from_email_single(self,current_user,current_password,counter,imap_url,num_message,substring_filter,link_regex,lock):
+ 
+        
+        current_user_mp = self.current_user
+        current_password_mp = self.current_password
+
+        self.lock.acquire()
+        login_session_mp = imaplib.IMAP4_SSL(self.imap_url,993)
+        login_session_mp.login(current_user_mp,current_password_mp)
+        self.search_mail_status, self.amount_matching_criteria = login_session_mp.search(Mail.CHARSET,self.search_criteria)
+        _,individual_response_data = login_session_mp.fetch(self.num_message,'(RFC822)')
+        self.lock().release
+        
+        raw = email.message_from_bytes(individual_response_data[0][1])
+        scraped_email_value = str(email.message_from_bytes(Mail.scrape_email(raw)))
+        print(scraped_email_value)
+        returned_links = str(link_regex.findall(scraped_email_value))
+        #collected_emails.write(self.returned_links+'\n')
+        #collected_nums.write(self.num_message+b'\n')
+        #self.timestamp = time.strftime('%H:%M:%S')
+        
+        for i in returned_links:
+            if substring_filter:
+                self.lock.acquire()            
+                with open('out.txt','a+') as link_file:
+                    link_file.write(i +'\n')
+                    link_file.close()
+                self.lock.release()
+    def scrape_link_mp(self):
+        self.file_counter = 0
+        self.login_session.logout()
+        self.Manager = multiprocessing.Manager()
+        self.lock = self.Manager.RLock()
+        futures = []
+            
+           # with open('collected.txt','r+b') as collected_nums: #used to count how many are already done
+            #    with open('collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
+        with concurrent.futures.ProcessPoolExecutor() as Executor:    
+            for self.num_message in self.arr_of_emails[self.start_index:]:
+                task_params = self.current_user,self.current_password,self.counter,self.imap_url,self.num_message,self.substring_filter,self.link_regex,self.lock
+                futures.append(
+                        Executor.submit(
+                            self.scrape_link_from_email_single,
+                            *task_params
+                            )
+                        )
+            for future in concurrent.futures.as_completed(futures):
+                self.counter+=1
+                self.timestamp = time.strftime('%H:%M:%S')
+                print(f'[{self.timestamp}] DONE: {self.counter}/{len(self.num_mails)}')
+                print(future.result())
+
+    def scrape_link_from_email(self,substring_filter):
+        pattern = '(?P<url>https?://[^\s]+)'
+        link_regex = re.compile(pattern)
+        for num_message in self.arr_of_emails[self.start_index:]:
+            with open('collected.txt','r+b') as collected_nums: #used to count how many are already done
+                with open('collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
+                    self.open_files.append(collected_nums)
+                    self.open_files.append(collected_emails)
+                    self.file_counter +=1
+                    self.counter +=1
+                    _,self.individual_response_data = self.login_session.fetch(num_message,'(RFC822)')
+                    self.raw = email.message_from_bytes(self.individual_response_data[0][1])
+                    self.scraped_email_value = str(email.message_from_bytes(Mail.scrape_email(self.raw)))
+                    self.returned_links = link_regex.findall(self.scraped_email_value)
+                    substring_filter = str(substring_filter)
+                    
+                    for i in self.returned_links:         
+                        if substring_filter in str(i):
+                            print(f'[{self.timestamp}] LINKS FETCHED: [{self.counter}/{len(self.arr_of_emails)-self.start_index}]')
+                            collected_emails.write(i+'\r')
+                    collected_nums.write(num_message+b'\n')
+                    self.timestamp = time.strftime('%H:%M:%S')
+                    print(f'[{self.timestamp}] LINKS FETCHED: [{self.counter}/{len(self.arr_of_emails)-self.start_index}]')
+                    collected_emails.close()
+                    self.open_files.remove(collected_emails)
+                collected_nums.close()
+                self.open_files.remove(collected_nums)
+                self.FILTERED_LINKS = []
 
     def get_mail_credentials(self,user,password,imap_url):
         
@@ -41,7 +122,7 @@ class Mail():
         self.current_password = password
         self.imap_url = imap_url
         self.login_to_email()
-    
+
     def scrape_inbox(self):
         self.link_set = set()
         inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
@@ -55,134 +136,98 @@ class Mail():
             self.selected_inbox = Mail.inbox_options["DRAFTS"]
         elif inbox_choice == '5':
             self.selected_inbox = Mail.inbox_options["SENT"]
-        try:
-            self.substring_filter = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
-            self.inbox_found_status, inbox_length = self.login_session.select(self.selected_inbox)
-            amount_of_mails = inbox_length[0]
-            amount_of_mails = str(amount_of_mails)
-            num_mails = re.search(r"\d+",amount_of_mails)
-            sys.stdout.write(Style.CYAN)
-            print(f'[{Mail.timestamp}] Found {num_mails.group()} emails in selected inbox')
-            sys.stdout.write(Style.RESET)
-            search_criteria = "FROM 'questions_en@footlocker.eu'"
-            #search_criteria = input('Type In the email address you would like to scrape from\n> ')
-            #search_criteria = f"FROM '{search_criteria.strip()}'"
-            sys.stdout.write(Style.YELLOW)
-            print(f'[{Mail.timestamp}] Scanning inbox')
-            sys.stdout.write(Style.RESET)
-            self.search_mail_status, self.amount_matching_criteria = self.login_session.search(Mail.CHARSET,search_criteria)
-            
-            if self.amount_matching_criteria == 0 or self.amount_matching_criteria == '0':
-                print(f'[{Mail.timestamp}] No mails from that email address could be found...')
-                Mail.enter_to_continue()
-                import main
-                main.main_wrapper()
-            else:
-                self.link_set = set()
-                pattern = '(?P<url>https?://[^\s]+)'
-                prog = re.compile(pattern)
-
-                self.amount_matching_criteria = self.amount_matching_criteria[0]
-                amount_matching_criteria_str = str(self.amount_matching_criteria)
-                num_mails = re.search(r"\d.+",amount_matching_criteria_str)
-                num_mails = ((num_mails.group())[:-1]).split(' ')
-    
-                sys.stdout.write(Style.GREEN)
-                self.timestamp = time.strftime('%H:%M:%S')
-                print(f'[{self.timestamp}] Status code of {self.search_mail_status}')
-                sys.stdout.write(Style.RESET)
-                sys.stdout.write(Style.YELLOW)
-                self.timestamp = time.strftime('%H:%M:%S')
-                print(f'[{self.timestamp}] Found {len(num_mails)} emails')
-                sys.stdout.write(Style.RESET)
-                
-                counter = 0
-                #want to see if i can store the emails in fetched form so i dont have to call them each time
-                MESSAGES_ARRAY = []
-                for message_num in self.amount_matching_criteria.split():
-                    _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
-                    MESSAGES_ARRAY.append(self.individual_response_data)
-                    sys.stdout.write(Style.MAGENTA)
-                    print(message_num)
-                    print(len(MESSAGES_ARRAY))
-                    sys.stdout.write(Style.RESET)
-                    
-                print(MESSAGES_ARRAY)
-                #
-                self.start_time = time.time()
-
-                #1 task
-                sys.stdout.write(Style.MAGENTA)
-                #out is the file which will have links, c has completed tasks
-                with open('out.txt','a') as f:
-                    with open('completed.txt','a+') as c:
-                        found_in_line  = False
-                        for message_num in self.amount_matching_criteria.split():
-                            message_num_check = str(message_num)
-
-                            
-                            
-                            counter += 1
-                            #individual res data is the raw response which is turned in a readable message with mail.scrape_email
-                            _, self.individual_response_data = self.login_session.fetch(message_num, '(RFC822)')
-                            #skips the email if it is areadly scraped, also gives us a way to save between sessioons
-                            
-                            
-                            with open('completed.txt','r') as completed_check:
-                                for line in completed_check:
-                                    if message_num_check in line:
-                                        found_in_line = True
-                                        self.timestamp = time.strftime('%H:%M:%S')
-                                        print(f'[{self.timestamp}] AlREADY SCRAPED')
-                                        
-                                    else:
-                                        found_in_line = False
-                                        
-                                    
-
-                                
-                                
-                                                
-                                #the b turns \r into byte form so it can be concatenated
-                                if found_in_line != True:
-                                    c.write(message_num_check)
-                                    self.raw = email.message_from_bytes(self.individual_response_data[0][1])
-                                    raw = self.raw
-                                    self.scraped_email_value = email.message_from_bytes(Mail.scrape_email(raw))
-                                    self.scraped_email_value = str(self.scraped_email_value)
-                                    self.returned_links = prog.findall(self.scraped_email_value)
-                  
-                                    for i in self.returned_links:
-                                        if self.substring_filter in i:
-                                            f.write(i+'\r')
-                                #self.link_set.add(i)
         
-                                    self.timestamp = time.strftime('%H:%M:%S')
-                                    sys.stdout.write(Style.GREEN)
-                                    print(f'[{self.timestamp}] Links scraped: [{counter}/{len(num_mails)}]')
-                    
-                                    sys.stdout.write(Style.RESET)
-
-                        c.close()
-                    f.close()
-                #end of task
-                self.end_time = time.time()
-                self.time_taken = self.end_time - self.start_time
-                sys.stdout.write(Style.YELLOW)
-                self.timestamp = time.strftime('%H:%M:%S')
-                print(f'[{self.timestamp}] Time taken:{self.time_taken}')
-                sys.stdout.write(Style.RESET)
-                #self.write_to_text_file(self.link_set)
-                Mail.enter_to_continue()
-                import main
-                main.main_wrapper()
-        except Exception as e:
-            print(e)
-            print(Mail.logging_in_error)
+        self.substring_filter = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
+        self.inbox_found_status, inbox_length = self.login_session.select(self.selected_inbox)
+        amount_of_mails = inbox_length[0]
+        amount_of_mails = str(amount_of_mails)
+        num_mails = re.search(r"\d+",amount_of_mails)
+        sys.stdout.write(Style.CYAN)
+        print(f'[{Mail.timestamp}] Found {num_mails.group()} emails in selected inbox')
+        sys.stdout.write(Style.RESET)
+        search_criteria = input('Which sender email address do you want to scrape?\nInput> ')
+        #questions_en@footlocker.eu
+        search_criteria = f"FROM '{search_criteria}'"
+        self.search_criteria = search_criteria
+        sys.stdout.write(Style.YELLOW)
+        print(f'[{Mail.timestamp}] Scanning inbox')
+        sys.stdout.write(Style.RESET)
+        self.search_mail_status, self.amount_matching_criteria = self.login_session.search(Mail.CHARSET,search_criteria)
+            
+        if self.amount_matching_criteria == 0 or self.amount_matching_criteria == '0':
+            print(f'[{Mail.timestamp}] No mails from that email address could be found...')
             Mail.enter_to_continue()
             import main
             main.main_wrapper()
+        else:
+            self.run_type = input('Would you like concurrency? [ 0:Yes | 1:No ]')
+            pattern = '(?P<url>https?://[^\s]+)'
+            self.link_regex = re.compile(pattern)
+            self.link_set = set()
+            
 
+            self.amount_matching_criteria = self.amount_matching_criteria[0]
+            amount_matching_criteria_str = str(self.amount_matching_criteria)
+            num_mails = re.search(r"\d.+",amount_matching_criteria_str)
+            self.num_mails = ((num_mails.group())[:-1]).split(' ')
+
+            sys.stdout.write(Style.GREEN)
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Status code of {self.search_mail_status}')
+            sys.stdout.write(Style.RESET)
+            sys.stdout.write(Style.YELLOW)
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Found {len(self.num_mails)} emails')
+            sys.stdout.write(Style.RESET)
+                
+            self.counter = 0
+            self.arr_of_emails = self.amount_matching_criteria.split()
+            self.arr_of_emails_decoded = []
+            for i in self.arr_of_emails:
+                d = i.decode("utf-8")
+                self.arr_of_emails_decoded.append(d)
+
+                #want to see if i can store the emails in fetched form so i dont have to call them each time
+            try:
+                
+                read_email = getLastLine('collected.txt',len(self.num_mails))
+                read_email = read_email.decode("utf-8").strip()
+                self.start_index = self.arr_of_emails_decoded.index(read_email)
+            except:
+                self.counter = 0
+                read_email = None
+                self.start_index = 0
+                    #this opens the file containing the indexes used. It add the b'num' to the collected.txt file once if has been scraped
+                    #After this it also add the body of that b'num' to the collected_emails file so that we can import them and then filter them for links
+            self.open_files = []
+            self.start_time = time.time()  
+            print(f'STARTING FROM {self.start_index}')
+            sys.stdout.write(Style.BLUE)
+            self.file_counter = 0
+            print(self.run_type)
+            if self.run_type == '0':
+                self.scrape_link_mp()
+            
+            #if self.run_type == '1':
+                
+            #    self.scrape_link_from_email(self.substring_filter)
+            
+
+            with open('collected_links.txt','r') as all_links:
+                links_returned = all_links.readlines()                
+                print(links_returned)
+               
+            self.end_time = time.time()
+            self.time_taken = self.end_time - self.start_time
+            sys.stdout.write(Style.RESET)
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Time taken:{self.time_taken}')
+        
+                #self.write_to_text_file(self.link_set)
+            Mail.enter_to_continue()
+            import main
+            main.main_wrapper()
+       
     def login_to_email(self):
         sys.stdout.write(Style.YELLOW)
         print(f'[{Mail.timestamp}] Logging into {self.current_user}...')
@@ -195,7 +240,7 @@ class Mail():
             sys.stdout.write(Style.RESET)
             self.scrape_inbox()
 
-        except:
+        except imaplib.IMAP4.error:
             except_block = True
             print(Mail.logging_in_error)
             while except_block == True:
@@ -214,20 +259,20 @@ class Mail():
                 else:
                     print(Mail.not_an_option)
                     pass
-    
-#    def write_to_text_file(self,link_set):
-#        with open(self.file,'a') as f:
-#            for i in self.link_set:
-#                f.write(i+'\r')
-#            f.close()
-#        print(self.link_set)
+        except KeyboardInterrupt:
+            for i in self.open_files:
+                try:
+                    i.close()
+                except:
+                    pass
+            print('closing...')
+            time.sleep(0.5)
 
-    
     @staticmethod
     def scrape_email(raw):
         
         if raw.is_multipart():
-            
+           
             return Mail.scrape_email(raw.get_payload(0))
         else:
             return raw.get_payload(None,True)
@@ -238,7 +283,6 @@ class Mail():
         if bool(await_input) == True:
             except_block = False
     
-
 def check_if_string_in_file(file_name, string_to_search):
     """ Check if any line in the file contains given string """
     # Open the file in read only mode
@@ -249,3 +293,17 @@ def check_if_string_in_file(file_name, string_to_search):
             if string_to_search in line:
                 return True
     return False
+
+def getLastLine(fname, maxLineLength):
+    print('Reading last scraped email...')
+    with open(fname, "rb") as fp:
+        seekd = fp.seek(maxLineLength, 2) # 2 means "from the end of the file"
+    fp.close()
+    if seekd == '' or seekd == None:
+        getLastLine(fname,maxLineLength-1)
+    else:
+        with open(fname,'rb') as fp:
+            read_line = fp.readlines()[-1]
+        fp.close()
+    return read_line
+            
