@@ -33,29 +33,69 @@ class Mail():
 
         self.email_name = email_name
         self.email_password = email_password
-#you cannot reuse ssl socket so you have to create a new login each time
-    
+
+    def get_mail_credentials(self,user,password,imap_url):
+        self.current_user = user
+        self.current_password = password
+        self.imap_url = imap_url
+        self.login_to_email()
+
+    def login_to_email(self):
+        sys.stdout.write(Style.YELLOW)
+        print(f'[{Mail.timestamp}] Logging into {self.current_user}...')
+        try:
+            self.login_session = imaplib.IMAP4_SSL(self.imap_url,993)
+            self.login_session.login(self.current_user,self.current_password)
+            sys.stdout.write(Style.RESET)
+            sys.stdout.write(Style.GREEN)
+            print(f'[{Mail.timestamp}] Successfully Logged in...')
+            sys.stdout.write(Style.RESET)
+            self.scrape_inbox()
+
+        except imaplib.IMAP4.error:
+            except_block = True
+            print(Mail.logging_in_error)
+            while except_block == True:
+                
+                view_settings = input('Would you like to check your login credentials? [1: Yes | 0: No]\n> ')
+                if view_settings == '1':
+                    with open('user_settings/gmail_defaults.json','r') as f:
+                        check_credentials_file = f.read()
+                        print(check_credentials_file)
+                        Mail.enter_to_continue()
+                        import main
+                        main.main_wrapper()
+                elif view_settings == '0':
+                    import main
+                    main.main_wrapper()
+                else:
+                    print(Mail.not_an_option)
+                    pass
+        except KeyboardInterrupt:
+            for i in self.open_files:
+                try:
+                    i.close()
+                except:
+                    pass
+            print('closing...')
+            time.sleep(0.5)
+#you cannot reuse ssl socket so you have to create a new login each time    
     def scrape_link_from_email_single(self,current_user,current_password,counter,imap_url,num_message,substring_filter,link_regex,lock):
- 
-        
         current_user_mp = self.current_user
         current_password_mp = self.current_password
-
         self.lock.acquire()
         login_session_mp = imaplib.IMAP4_SSL(self.imap_url,993)
         login_session_mp.login(current_user_mp,current_password_mp)
         self.search_mail_status, self.amount_matching_criteria = login_session_mp.search(Mail.CHARSET,self.search_criteria)
         _,individual_response_data = login_session_mp.fetch(self.num_message,'(RFC822)')
         self.lock().release
-        
         raw = email.message_from_bytes(individual_response_data[0][1])
         scraped_email_value = str(email.message_from_bytes(Mail.scrape_email(raw)))
         print(scraped_email_value)
         returned_links = str(link_regex.findall(scraped_email_value))
         #collected_emails.write(self.returned_links+'\n')
         #collected_nums.write(self.num_message+b'\n')
-        #self.timestamp = time.strftime('%H:%M:%S')
-        
+     #self.timestamp = time.strftime('%H:%M:%S')   
         for i in returned_links:
             if substring_filter:
                 self.lock.acquire()            
@@ -63,15 +103,13 @@ class Mail():
                     link_file.write(i +'\n')
                     link_file.close()
                 self.lock.release()
+
     def scrape_link_mp(self):
         self.file_counter = 0
         self.login_session.logout()
         self.Manager = multiprocessing.Manager()
         self.lock = self.Manager.RLock()
-        futures = []
-            
-           # with open('collected.txt','r+b') as collected_nums: #used to count how many are already done
-            #    with open('collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
+        futures = []           
         with concurrent.futures.ProcessPoolExecutor() as Executor:    
             for self.num_message in self.arr_of_emails[self.start_index:]:
                 task_params = self.current_user,self.current_password,self.counter,self.imap_url,self.num_message,self.substring_filter,self.link_regex,self.lock
@@ -91,8 +129,8 @@ class Mail():
         pattern = '(?P<url>https?://[^\s]+)'
         link_regex = re.compile(pattern)
         for num_message in self.arr_of_emails[self.start_index:]:
-            with open('collected.txt','r+b') as collected_nums: #used to count how many are already done
-                with open('collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
+            with open('user_settings/save_data.txt','r+b') as collected_nums: #used to count how many are already done
+                with open('user_settings/collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
                     self.open_files.append(collected_nums)
                     self.open_files.append(collected_emails)
                     self.file_counter +=1
@@ -104,25 +142,20 @@ class Mail():
                     substring_filter = str(substring_filter)
                     
                     for i in self.returned_links:         
-                        if substring_filter in str(i):
+                        if substring_filter in i:
+                        
                             print(f'[{self.timestamp}] LINKS FETCHED: [{self.counter}/{len(self.arr_of_emails)-self.start_index}]')
-                            collected_emails.write(i+'\r')
+                            collected_emails.write(i.replace('"','')+'\r')
                     collected_nums.write(num_message+b'\n')
                     self.timestamp = time.strftime('%H:%M:%S')
-                    print(f'[{self.timestamp}] LINKS FETCHED: [{self.counter}/{len(self.arr_of_emails)-self.start_index}]')
+                    
                     collected_emails.close()
                     self.open_files.remove(collected_emails)
                 collected_nums.close()
                 self.open_files.remove(collected_nums)
                 self.FILTERED_LINKS = []
 
-    def get_mail_credentials(self,user,password,imap_url):
-        
-        self.current_user = user
-        self.current_password = password
-        self.imap_url = imap_url
-        self.login_to_email()
-
+#this is where the rest of the options are set, the actual link scraping functions are called here
     def scrape_inbox(self):
         self.link_set = set()
         inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
@@ -160,7 +193,9 @@ class Mail():
             import main
             main.main_wrapper()
         else:
-            self.run_type = input('Would you like concurrency? [ 0:Yes | 1:No ]')
+            input('Press ENTER to start...')
+            self.run_type = '1'
+            # self.run_type = input('Would you like concurrency? [ 0:Yes | 1:No ]')
             pattern = '(?P<url>https?://[^\s]+)'
             self.link_regex = re.compile(pattern)
             self.link_set = set()
@@ -190,7 +225,7 @@ class Mail():
                 #want to see if i can store the emails in fetched form so i dont have to call them each time
             try:
                 
-                read_email = getLastLine('collected.txt',len(self.num_mails))
+                read_email = getLastLine('user_settings/save_data.txt',len(self.num_mails))
                 read_email = read_email.decode("utf-8").strip()
                 self.start_index = self.arr_of_emails_decoded.index(read_email)
             except:
@@ -204,16 +239,14 @@ class Mail():
             print(f'STARTING FROM {self.start_index}')
             sys.stdout.write(Style.BLUE)
             self.file_counter = 0
-            print(self.run_type)
+            
             if self.run_type == '0':
                 self.scrape_link_mp()
             
-            #if self.run_type == '1':
-                
-            #    self.scrape_link_from_email(self.substring_filter)
+            if self.run_type == '1':
+                self.scrape_link_from_email(self.substring_filter)
             
-
-            with open('collected_links.txt','r') as all_links:
+            with open('user_settings/collected_links.txt','r') as all_links:
                 links_returned = all_links.readlines()                
                 print(links_returned)
                
@@ -226,47 +259,7 @@ class Mail():
                 #self.write_to_text_file(self.link_set)
             Mail.enter_to_continue()
             import main
-            main.main_wrapper()
-       
-    def login_to_email(self):
-        sys.stdout.write(Style.YELLOW)
-        print(f'[{Mail.timestamp}] Logging into {self.current_user}...')
-        try:
-            self.login_session = imaplib.IMAP4_SSL(self.imap_url,993)
-            self.login_session.login(self.current_user,self.current_password)
-            sys.stdout.write(Style.RESET)
-            sys.stdout.write(Style.GREEN)
-            print(f'[{Mail.timestamp}] Successfully Logged in...')
-            sys.stdout.write(Style.RESET)
-            self.scrape_inbox()
-
-        except imaplib.IMAP4.error:
-            except_block = True
-            print(Mail.logging_in_error)
-            while except_block == True:
-                
-                view_settings = input('Would you like to check your login credentials? [1: Yes | 0: No]\n> ')
-                if view_settings == '1':
-                    with open('user_settings/defaults.json','r') as f:
-                        check_credentials_file = f.read()
-                        print(check_credentials_file)
-                        Mail.enter_to_continue()
-                        import main
-                        main.main_wrapper()
-                elif view_settings == '0':
-                    import main
-                    main.main_wrapper()
-                else:
-                    print(Mail.not_an_option)
-                    pass
-        except KeyboardInterrupt:
-            for i in self.open_files:
-                try:
-                    i.close()
-                except:
-                    pass
-            print('closing...')
-            time.sleep(0.5)
+            main.main_wrapper()   
 
     @staticmethod
     def scrape_email(raw):

@@ -27,7 +27,7 @@ class Menu:
     def set_defalut_menu(self):
         communicate_choice_status = colored('You selected Edit Defaults\n\n',color='yellow')
         print(communicate_choice_status)
-        with open('user_settings/defaults.json') as f:
+        with open('user_settings/gmail_defaults.json') as f:
             data = json.load(f)
             f.close()
             set_json = True
@@ -39,7 +39,7 @@ class Menu:
                 if confirm_change_json == '1':
                     data["email_address"] = change_email_json
                     data["email_password"] = change_password_json
-                    json_settings = open('user_settings/defaults.json','w')
+                    json_settings = open('user_settings/gmail_defaults.json','w')
                     json.dump(data,json_settings)
                     json_settings.close()
                     set_json = False
@@ -54,7 +54,7 @@ class Menu:
         
 
     def start_mail_menu(self):
-        with open('user_settings/defaults.json') as f:
+        with open('user_settings/gmail_defaults.json') as f:
             data = json.load(f)
             email_address = data["email_address"]
             email_password = data["email_password"]
