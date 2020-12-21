@@ -1,4 +1,4 @@
-import imaplib, email, time, sys, json, re, os
+import imaplib, email, time, sys, json, re, os, random
 from termcolor import colored
 import art
 import bs4
@@ -33,6 +33,7 @@ class Mail():
 
         self.email_name = email_name
         self.email_password = email_password
+        
 
     def get_mail_credentials(self,user,password,imap_url):
         self.current_user = user
@@ -99,7 +100,7 @@ class Mail():
         for i in returned_links:
             if substring_filter:
                 self.lock.acquire()            
-                with open('out.txt','a+') as link_file:
+                with open(self.link_output_file,'a+') as link_file:
                     link_file.write(i +'\n')
                     link_file.close()
                 self.lock.release()
@@ -129,8 +130,8 @@ class Mail():
         pattern = '(?P<url>https?://[^\s]+)'
         link_regex = re.compile(pattern)
         for num_message in self.arr_of_emails[self.start_index:]:
-            with open('user_settings/save_data.txt','r+b') as collected_nums: #used to count how many are already done
-                with open('user_settings/collected_links.txt','a+') as collected_emails: # needs to be an array so that we can read it again
+            with open(self.last_email_save_file,'r+b') as collected_nums: #used to count how many are already done
+                with open(self.link_output_file,'a+') as collected_emails: # needs to be an array so that we can read it again
                     self.open_files.append(collected_nums)
                     self.open_files.append(collected_emails)
                     self.file_counter +=1
@@ -157,6 +158,7 @@ class Mail():
 
 #this is where the rest of the options are set, the actual link scraping functions are called here
     def scrape_inbox(self):
+        self.session_id = random.randint(0,10000)
         self.link_set = set()
         inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
         if inbox_choice == '1':
@@ -184,6 +186,32 @@ class Mail():
         print(list_of_senders_addresses)
         sys.stdout.write(Style.YELLOW)
         search_criteria = int(input('Type the number of the address you\'d like to scrape...\n> '))
+        self.is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]'))
+        if self.is_new_file == 0:
+            output_directory = os.listdir('output/')
+            if len(output_directory) == 0:
+                sys.stdout.write(Style.RED)
+                print('There were no files located in the output folder, creating one now...')
+                sys.stdout.write(Style.RESET)
+                self.is_new_file = 1
+            elif len(output_directory) >= 2:
+                [print(f'{output_directory.index(files)} : {files}') for files in output_directory]
+
+                self.link_output_file = int(input('Please enter the number of the links file you would like to choose\n> '))
+                self.last_email_save_file = int(input('Please enter the number for the corresponding save file\n> '))
+                self.link_output_file = 'output/'+output_directory[self.link_output_file]
+                self.last_email_save_file = 'output/'+output_directory[self.last_email_save_file]
+                
+        if self.is_new_file == 1:
+            self.link_output_file = 'links_'+str(self.session_id)+'.txt'
+            self.last_email_save_file = 'last_save_'+str(self.session_id)+'.txt'
+            self.link_output_file = 'output/'+self.link_output_file
+            self.last_email_save_file = 'output/'+self.last_email_save_file
+            with open(self.link_output_file,'w') as link_file:
+                link_file.close()
+            with open(self.last_email_save_file,'w') as save_file:
+                save_file.close()
+
         sys.stdout.write(Style.RESET)
         search_criteria = (self.senders[search_criteria]).strip()
         self.search_criteria = f"FROM '{search_criteria}'"
@@ -231,7 +259,7 @@ class Mail():
                 #want to see if i can store the emails in fetched form so i dont have to call them each time
             try:
                 
-                read_email = getLastLine('user_settings/save_data.txt',len(self.num_mails))
+                read_email = getLastLine(self.last_email_save_file,len(self.num_mails))
                 read_email = read_email.decode("utf-8").strip()
                 self.start_index = self.arr_of_emails_decoded.index(read_email)
             except:
@@ -252,7 +280,7 @@ class Mail():
             if self.run_type == '1':
                 self.scrape_link_from_email(self.substring_filter)
             
-            with open('user_settings/collected_links.txt','r') as all_links:
+            with open(self.link_output_file,'r') as all_links:
                 links_returned = all_links.readlines()                
                 print(links_returned)
                
@@ -280,6 +308,7 @@ class Mail():
 
     def display_senders(self):
         return [f"{self.senders.index(name)} : {name}  " for name in self.senders]
+
     @staticmethod
     def scrape_email(raw):
         
