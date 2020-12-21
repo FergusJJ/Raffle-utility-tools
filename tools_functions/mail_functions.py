@@ -110,7 +110,7 @@ class Mail():
         self.Manager = multiprocessing.Manager()
         self.lock = self.Manager.RLock()
         futures = []           
-        with concurrent.futures.ProcessPoolExecutor() as Executor:    
+        with concurrent.futures.ThreadPoolExecutor() as Executor:    
             for self.num_message in self.arr_of_emails[self.start_index:]:
                 task_params = self.current_user,self.current_password,self.counter,self.imap_url,self.num_message,self.substring_filter,self.link_regex,self.lock
                 futures.append(
@@ -178,14 +178,21 @@ class Mail():
         sys.stdout.write(Style.CYAN)
         print(f'[{Mail.timestamp}] Found {num_mails.group()} emails in selected inbox')
         sys.stdout.write(Style.RESET)
-        search_criteria = input('Which sender email address do you want to scrape?\nInput> ')
-        #questions_en@footlocker.eu
-        search_criteria = f"FROM '{search_criteria}'"
-        self.search_criteria = search_criteria
+        #getting email address you'd like to scrape
+        self.senders = self.read_frequent_senders()
+        list_of_senders_addresses = self.display_senders()
+        print(list_of_senders_addresses)
+        sys.stdout.write(Style.YELLOW)
+        search_criteria = int(input('Type the number of the address you\'d like to scrape...\n> '))
+        sys.stdout.write(Style.RESET)
+        search_criteria = (self.senders[search_criteria]).strip()
+        self.search_criteria = f"FROM '{search_criteria}'"
+
         sys.stdout.write(Style.YELLOW)
         print(f'[{Mail.timestamp}] Scanning inbox')
         sys.stdout.write(Style.RESET)
-        self.search_mail_status, self.amount_matching_criteria = self.login_session.search(Mail.CHARSET,search_criteria)
+        
+        self.search_mail_status, self.amount_matching_criteria = self.login_session.search(Mail.CHARSET,self.search_criteria)
             
         if self.amount_matching_criteria == 0 or self.amount_matching_criteria == '0':
             print(f'[{Mail.timestamp}] No mails from that email address could be found...')
@@ -193,7 +200,6 @@ class Mail():
             import main
             main.main_wrapper()
         else:
-            input('Press ENTER to start...')
             self.run_type = '1'
             # self.run_type = input('Would you like concurrency? [ 0:Yes | 1:No ]')
             pattern = '(?P<url>https?://[^\s]+)'
@@ -237,7 +243,7 @@ class Mail():
             self.open_files = []
             self.start_time = time.time()  
             print(f'STARTING FROM {self.start_index}')
-            sys.stdout.write(Style.BLUE)
+            sys.stdout.write(Style.MAGENTA)
             self.file_counter = 0
             
             if self.run_type == '0':
@@ -252,7 +258,7 @@ class Mail():
                
             self.end_time = time.time()
             self.time_taken = self.end_time - self.start_time
-            sys.stdout.write(Style.RESET)
+
             self.timestamp = time.strftime('%H:%M:%S')
             print(f'[{self.timestamp}] Time taken:{self.time_taken}')
         
@@ -261,6 +267,19 @@ class Mail():
             import main
             main.main_wrapper()   
 
+    def read_frequent_senders(self):
+        with open('user_settings/frequent_senders.txt') as frequent_senders:
+            lines = frequent_senders.readlines()
+            stripped_lines = []
+            for line in lines:
+                line = line.strip()
+                stripped_lines.append(line)
+        frequent_senders.close()
+        del lines
+        return stripped_lines
+
+    def display_senders(self):
+        return [f"{self.senders.index(name)} : {name}  " for name in self.senders]
     @staticmethod
     def scrape_email(raw):
         
