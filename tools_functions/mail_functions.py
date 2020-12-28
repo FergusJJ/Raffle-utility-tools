@@ -52,7 +52,10 @@ class Mail():
             sys.stdout.write(Style.GREEN)
             print(f'[{Mail.timestamp}] Successfully Logged in...')
             sys.stdout.write(Style.RESET)
-            self.scrape_inbox()
+            if self.imap_url == 'imap.gmail.com':
+                self.gmail_scrape_inbox()
+            elif self.imap_url == 'outlook.office365.com':
+                self.outlook_scrape_inbox()
 
         except imaplib.IMAP4.error:
             except_block = True
@@ -158,8 +161,8 @@ class Mail():
                 self.FILTERED_LINKS = []
 
 #this is where the rest of the options are set, the actual link scraping functions are called here
-    def scrape_inbox(self):
-        self.session_id = random.randint(0,10000)
+    def gmail_scrape_inbox(self):
+        self.session_id = random.randint(0,100000)
         self.link_set = set()
         inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
         if inbox_choice == '1':
