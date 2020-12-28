@@ -32,7 +32,8 @@ class Mail():
     def init(self, email_name, email_password):
 
         self.email_name = email_name
-        self.email_password = email_password   
+        self.email_password = email_password
+        
 
     def get_mail_credentials(self,user,password,imap_url):
         self.current_user = user
@@ -154,6 +155,7 @@ class Mail():
                 collected_nums.close()
                 self.open_files.remove(collected_nums)
                 self.FILTERED_LINKS = []
+
 #this is where the rest of the options are set, the actual link scraping functions are called here
     def scrape_inbox(self):
         self.session_id = random.randint(0,10000)
@@ -184,7 +186,7 @@ class Mail():
         print(list_of_senders_addresses)
         sys.stdout.write(Style.YELLOW)
         search_criteria = int(input('Type the number of the address you\'d like to scrape...\n> '))
-        self.is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]\n> '))
+        self.is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]'))
         if self.is_new_file == 0:
             output_directory = os.listdir('output/')
             if len(output_directory) == 0:
