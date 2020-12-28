@@ -39,6 +39,7 @@ class Mail():
         self.current_user = user
         self.current_password = password
         self.imap_url = imap_url
+        print(self.imap_url)
         self.login_to_email()
 
     def login_to_email(self):

@@ -44,7 +44,19 @@ def main_wrapper():
     menu = Menu('main')
     start_running = start()
     if start_running == 1:
-        menu.start_mail_menu()
+        sys.stdout.write(Style.YELLOW)
+        which_provider = input('Which would you like to scrape? [ 1: Gmail | 2: Outlook ]\n> ')
+        sys.stdout.write(Style.RESET)
+        if which_provider == '1':
+            menu.gmail_start_mail_menu()
+        elif which_provider == '2':
+            menu.outlook_start_mail_menu()
+        else:
+            sys.stdout.write(Style.RED)
+            print('That is not an option...')
+            sys.stdout.write(Style.RESET)
+            os.system('cls')
+            main_wrapper()
     elif start_running == 2:
         menu.set_defalut_menu()
 

@@ -53,25 +53,48 @@ class Menu:
         main.main_wrapper()
         
 
-    def start_mail_menu(self):
+    def gmail_start_mail_menu(self):
         with open('user_settings/gmail_defaults.json') as f:
             data = json.load(f)
-            email_address = data["email_address"]
-            email_password = data["email_password"]
+            gmail_email_address = data["email_address"]
+            gmail_email_password = data["email_password"]
         
             
 
         communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
         print(communicate_choice_status)
-        mail_instance = Mail()
+        gmail_mail_instance = Mail()
         
         try:
-            print('['+Menu.timestamp+']'+' You Selected: '+email_address)
+            print('['+Menu.timestamp+']'+' You Selected: '+gmail_email_address)
         
         except:
             setup_message = colored('Note: You don\'t have a default email set up, to avoid having to re-type your credentials set one up from the start menu',color='red')
             print(setup_message+'\n')
-            email_address = input('Enter your email\n> ')
-            email_password = input('\nEnter your password\n> ')
+            gmail_email_address = input('Enter your email\n> ')
+            gmail_email_password = input('\nEnter your password\n> ')
         
-        mail_instance.get_mail_credentials(email_address,email_password,imap_url='imap.gmail.com')
+        gmail_mail_instance.get_mail_credentials(gmail_email_address,gmail_email_password,imap_url='imap.gmail.com')
+    
+    def outlook_start_mail_menu(self):
+        with open('user_settings/outlook_defaults.json') as f:
+            data = json.load(f)
+            outlook_email_address = data["email_address"]
+            outlook_email_password = data["email_password"]
+        
+            
+
+        communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
+        print(communicate_choice_status)
+        outlook_mail_instance = Mail()
+        
+        try:
+            print('['+Menu.timestamp+']'+' You Selected: '+outlook_email_address)
+        
+        except:
+            setup_message = colored('Note: You don\'t have a default email set up, to avoid having to re-type your credentials set one up from the start menu',color='red')
+            print(setup_message+'\n')
+            outlook_email_address = input('Enter your email\n> ')
+            outlook_email_password = input('\nEnter your password\n> ')
+        
+        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
