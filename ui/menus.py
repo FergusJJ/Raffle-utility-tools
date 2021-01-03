@@ -97,4 +97,5 @@ class Menu:
             outlook_email_address = input('Enter your email\n> ')
             outlook_email_password = input('\nEnter your password\n> ')
         
-        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
+        #outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
+        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='imap-mail.outlook.com')

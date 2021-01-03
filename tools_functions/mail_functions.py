@@ -28,6 +28,10 @@ class Mail():
             "TRASH":'[Gmail]/Trash"',
             "DRAFTS":"[Gmail]/Drafts"
         }
+    
+    outlook_inbox_options = {
+        "INBOX":"INBOX"
+    }
 
     def init(self, email_name, email_password):
 
@@ -39,14 +43,19 @@ class Mail():
         self.current_user = user
         self.current_password = password
         self.imap_url = imap_url
-        print(self.imap_url)
+        
         self.login_to_email()
 
     def login_to_email(self):
         sys.stdout.write(Style.YELLOW)
         print(f'[{Mail.timestamp}] Logging into {self.current_user}...')
         try:
-            self.login_session = imaplib.IMAP4_SSL(self.imap_url,993)
+           
+            if self.imap_url == 'imap.gmail.com':
+                self.login_session = imaplib.IMAP4_SSL(self.imap_url,993)
+            #elif self.imap_url == 'outlook.office365.com':
+            elif self.imap_url == 'imap-mail.outlook.com':
+                self.login_session = imaplib.IMAP4_SSL(self.imap_url)
             self.login_session.login(self.current_user,self.current_password)
             sys.stdout.write(Style.RESET)
             sys.stdout.write(Style.GREEN)
@@ -54,6 +63,8 @@ class Mail():
             sys.stdout.write(Style.RESET)
             if self.imap_url == 'imap.gmail.com':
                 self.gmail_scrape_inbox()
+            elif self.imap_url == 'imap-mail.outlook.com':
+                self.outlook_scrape_inbox()
             elif self.imap_url == 'outlook.office365.com':
                 self.outlook_scrape_inbox()
 
@@ -96,7 +107,7 @@ class Mail():
         self.lock().release
         raw = email.message_from_bytes(individual_response_data[0][1])
         scraped_email_value = str(email.message_from_bytes(Mail.scrape_email(raw)))
-        print(scraped_email_value)
+        
         returned_links = str(link_regex.findall(scraped_email_value))
         #collected_emails.write(self.returned_links+'\n')
         #collected_nums.write(self.num_message+b'\n')
@@ -133,7 +144,9 @@ class Mail():
     def scrape_link_from_email(self,substring_filter):
         pattern = '(?P<url>https?://[^\s]+)'
         link_regex = re.compile(pattern)
+        
         for num_message in self.arr_of_emails[self.start_index:]:
+            
             with open(self.last_email_save_file,'r+b') as collected_nums: #used to count how many are already done
                 with open(self.link_output_file,'a+') as collected_emails: # needs to be an array so that we can read it again
                     self.open_files.append(collected_nums)
@@ -141,9 +154,47 @@ class Mail():
                     self.file_counter +=1
                     self.counter +=1
                     _,self.individual_response_data = self.login_session.fetch(num_message,'(RFC822)')
+                    print(self.individual_response_data)
                     self.raw = email.message_from_bytes(self.individual_response_data[0][1])
                     self.scraped_email_value = str(email.message_from_bytes(Mail.scrape_email(self.raw)))
                     self.returned_links = link_regex.findall(self.scraped_email_value)
+                    substring_filter = str(substring_filter)
+                    
+                    for i in self.returned_links:         
+                        if substring_filter in i:
+                        
+                            print(f'[{self.timestamp}] LINKS FETCHED: [{self.counter}/{len(self.arr_of_emails)-self.start_index}]')
+                            collected_emails.write(i.replace('"','')+'\r')
+                    collected_nums.write(num_message+b'\n')
+                    self.timestamp = time.strftime('%H:%M:%S')
+                    
+                    collected_emails.close()
+                    self.open_files.remove(collected_emails)
+                collected_nums.close()
+                self.open_files.remove(collected_nums)
+                self.FILTERED_LINKS = []
+
+    def scrape_link_from_email_outlook(self,substring_filter):
+        pattern = '(?P<url>https?://[^\s]+)'
+        link_regex = re.compile(pattern)
+        
+        for num_message in self.arr_of_emails[self.start_index:]:
+            
+            with open(self.last_email_save_file,'r+b') as collected_nums: #used to count how many are already done
+                with open(self.link_output_file,'a+') as collected_emails: # needs to be an array so that we can read it again
+                    self.open_files.append(collected_nums)
+                    self.open_files.append(collected_emails)
+                    self.file_counter +=1
+                    self.counter +=1
+                    _,individual_response_data = self.login_session.uid("fetch",num_message,'(RFC822)')
+                    
+                    individual_body = individual_response_data[0][1].decode("utf-8")
+                    individual_body_parsed = email.message_from_string(individual_body)
+                    ttt = Mail.scrape_email(individual_body_parsed)
+                    print(ttt)
+                    #self.raw = email.message_from_bytes(self.individual_response_data[0][1])
+                    #self.scraped_email_value = str(email.message_from_string(Mail.scrape_email(self.raw)))
+                    self.returned_links = link_regex.findall(str(self.individual_body_parsed))
                     substring_filter = str(substring_filter)
                     
                     for i in self.returned_links:         
@@ -178,7 +229,8 @@ class Mail():
         
         self.substring_filter = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
         self.inbox_found_status, inbox_length = self.login_session.select(self.selected_inbox)
-        amount_of_mails = inbox_length[0]
+       
+        amount_of_mails = inbox_length[0] #  inbox length returns something like [b'1111'] we just want the 1111 part so we turn it to a string and get rid of quotations
         amount_of_mails = str(amount_of_mails)
         num_mails = re.search(r"\d+",amount_of_mails)
         sys.stdout.write(Style.CYAN)
@@ -225,7 +277,7 @@ class Mail():
         sys.stdout.write(Style.RESET)
         
         self.search_mail_status, self.amount_matching_criteria = self.login_session.search(Mail.CHARSET,self.search_criteria)
-            
+        print(self.search_mail_status)
         if self.amount_matching_criteria == 0 or self.amount_matching_criteria == '0':
             print(f'[{Mail.timestamp}] No mails from that email address could be found...')
             Mail.enter_to_continue()
@@ -299,6 +351,150 @@ class Mail():
             import main
             main.main_wrapper()   
 
+    def outlook_scrape_inbox(self):
+        self.session_id = random.randint(0,100000)
+        self.link_set = set()
+        inbox_choice = input('Which inbox would you like to scrape?[1: Inbox | 2: Spam | 3: Trash | 4: Drafts | 5: Sent]\n> ')
+        if inbox_choice == '1':
+            self.selected_inbox = Mail.outlook_inbox_options["INBOX"]
+        elif inbox_choice == '2':
+            self.selected_inbox = Mail.outlook_inbox_options["SPAM"]
+        elif inbox_choice == '3':
+            self.selected_inbox = Mail.outlook_inbox_options["TRASH"]
+        elif inbox_choice == '4':
+            self.selected_inbox = Mail.outlook_inbox_options["DRAFTS"]
+        elif inbox_choice == '5':
+            self.selected_inbox = Mail.outlook_inbox_options["SENT"]
+        
+        self.substring_filter = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
+
+        self.senders = self.read_frequent_senders()
+        list_of_senders_addresses = self.display_senders()
+        print(list_of_senders_addresses)
+        sys.stdout.write(Style.YELLOW)
+        self.search_criteria = int(input('Type the number of the address you\'d like to scrape...\n> '))
+        self.search_criteria = (self.senders[self.search_criteria]).strip()
+        self.search_criteria = f'FROM "{self.search_criteria}"'
+        #self.inbox_found_status, inbox_length = self.login_session.select("INBOX")
+        self.login_session.select(self.selected_inbox)
+        resp, items = self.login_session.uid("search",None, self.search_criteria)
+        
+        
+        num_mails = items
+        self.amount_matching_criteria = num_mails
+        num_mails = len(num_mails[0].decode("utf-8").split(' '))
+        sys.stdout.write(Style.CYAN)
+        print(f'[{Mail.timestamp}] Found {num_mails} emails in selected inbox')
+        
+        #getting email address you'd like to scrape
+        
+
+        self.is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]\n> '))
+        if self.is_new_file == 0:
+            output_directory = os.listdir('output/')
+            if len(output_directory) == 0:
+                sys.stdout.write(Style.RED)
+                print('There were no files located in the output folder, creating one now...')
+                sys.stdout.write(Style.RESET)
+                self.is_new_file = 1
+            elif len(output_directory) >= 2:
+                [print(f'{output_directory.index(files)} : {files}') for files in output_directory]
+
+                self.link_output_file = int(input('Please enter the number of the links file you would like to choose\n> '))
+                self.last_email_save_file = int(input('Please enter the number for the corresponding save file\n> '))
+                self.link_output_file = 'output/'+output_directory[self.link_output_file]
+                self.last_email_save_file = 'output/'+output_directory[self.last_email_save_file]
+                
+        if self.is_new_file == 1:
+            self.link_output_file = 'links_'+str(self.session_id)+'.txt'
+            self.last_email_save_file = 'last_save_'+str(self.session_id)+'.txt'
+            self.link_output_file = 'output/'+self.link_output_file
+            self.last_email_save_file = 'output/'+self.last_email_save_file
+            with open(self.link_output_file,'w') as link_file:
+                link_file.close()
+            with open(self.last_email_save_file,'w') as save_file:
+                save_file.close()
+
+        sys.stdout.write(Style.RESET)
+
+        
+
+        sys.stdout.write(Style.YELLOW)
+        print(f'[{Mail.timestamp}] Scanning inbox')
+        sys.stdout.write(Style.RESET)
+        
+        if self.amount_matching_criteria == 0 or self.amount_matching_criteria == '0':
+            print(f'[{Mail.timestamp}] No mails from that email address could be found...')
+            Mail.enter_to_continue()
+            import main
+            main.main_wrapper()
+        else:
+            self.run_type = '1'
+            # self.run_type = input('Would you like concurrency? [ 0:Yes | 1:No ]')
+            pattern = '(?P<url>https?://[^\s]+)'
+            self.link_regex = re.compile(pattern)
+            self.link_set = set()
+            
+
+            self.amount_matching_criteria = self.amount_matching_criteria[0]
+            amount_matching_criteria_str = str(self.amount_matching_criteria)
+            num_mails = re.search(r"\d.+",amount_matching_criteria_str)
+            self.num_mails = ((num_mails.group())[:-1]).split(' ')
+            print(self.num_mails)
+
+            sys.stdout.write(Style.GREEN)
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Status code of {resp}')
+            sys.stdout.write(Style.RESET)
+            sys.stdout.write(Style.YELLOW)
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Found {len(self.num_mails)} emails')
+            sys.stdout.write(Style.RESET)
+                
+            self.counter = 0
+            self.arr_of_emails = self.amount_matching_criteria.split()
+            self.arr_of_emails_decoded = []
+            for i in self.arr_of_emails:
+                d = i.decode("utf-8")
+                self.arr_of_emails_decoded.append(d)
+
+                #want to see if i can store the emails in fetched form so i dont have to call them each time
+            try:
+                
+                read_email = getLastLine(self.last_email_save_file,len(self.num_mails))
+                read_email = read_email.decode("utf-8").strip()
+                self.start_index = self.arr_of_emails_decoded.index(read_email)
+            except:
+                self.counter = 0
+                read_email = None
+                self.start_index = 0
+                    #this opens the file containing the indexes used. It add the b'num' to the collected.txt file once if has been scraped
+                    #After this it also add the body of that b'num' to the collected_emails file so that we can import them and then filter them for links
+            self.open_files = []
+            self.start_time = time.time()  
+            print(f'STARTING FROM {self.start_index}')
+            sys.stdout.write(Style.MAGENTA)
+            self.file_counter = 0
+
+            if self.run_type == '1':
+                self.scrape_link_from_email_outlook(self.substring_filter)
+            
+            with open(self.link_output_file,'r') as all_links:
+                links_returned = all_links.readlines()                
+                print(links_returned)
+               
+            self.end_time = time.time()
+            self.time_taken = self.end_time - self.start_time
+
+            self.timestamp = time.strftime('%H:%M:%S')
+            print(f'[{self.timestamp}] Time taken:{self.time_taken}')
+        
+                #self.write_to_text_file(self.link_set)
+            Mail.enter_to_continue()
+            import main
+            main.main_wrapper()
+
+
     def read_frequent_senders(self):
         with open('user_settings/frequent_senders.txt') as frequent_senders:
             lines = frequent_senders.readlines()
@@ -351,4 +547,3 @@ def getLastLine(fname, maxLineLength):
             read_line = fp.readlines()[-1]
         fp.close()
     return read_line
-            
