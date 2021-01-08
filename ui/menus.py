@@ -9,6 +9,7 @@ from datetime import timezone
 sys.path.append('.')
 from ui.colors import Style
 from tools_functions.mail_functions import Mail
+from tools_functions.outlook_mail_functions import Outlook
 
 
 class Menu:
@@ -32,7 +33,9 @@ class Menu:
             f.close()
             set_json = True
         while set_json == True:
+            print(f'Currently using: { data["email_address"] }')
             change_email_json = input('Enter the email that you would like to use\n> ')
+            print(f'Currently using: {data["email_password"]}')
             change_password_json = input('Enter the password that you would like to use\n> ')
             if change_email_json:
                 confirm_change_json = input('Are you sure you want to use the email '+change_email_json+' & password '+change_password_json+'? [1: Yes | 0: No]\n> ')
@@ -86,7 +89,7 @@ class Menu:
 
         communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
         print(communicate_choice_status)
-        outlook_mail_instance = Mail()
+        outlook_mail_instance = Outlook()
         
         try:
             print('['+Menu.timestamp+']'+' You Selected: '+outlook_email_address)
@@ -97,5 +100,5 @@ class Menu:
             outlook_email_address = input('Enter your email\n> ')
             outlook_email_password = input('\nEnter your password\n> ')
         
-        #outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
-        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='imap-mail.outlook.com')
+        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
+        #outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='imap-mail.outlook.com')

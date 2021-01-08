@@ -38,7 +38,11 @@ def main_wrapper():
     start_running = start()
     if start_running == 1:
         sys.stdout.write(Style.YELLOW)
-        which_provider = input('Which would you like to scrape? [ 1: Gmail | 2: Outlook ]\n> ')
+
+        #Add the which provider optn when outlook is complete
+        #which_provider = input('Which would you like to scrape? [ 1: Gmail | 2: Outlook ]\n> ')
+        
+        which_provider = '1'
         sys.stdout.write(Style.RESET)
         if which_provider == '1':
             menu.gmail_start_mail_menu()
