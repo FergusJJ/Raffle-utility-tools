@@ -1,6 +1,8 @@
 import sys
 import time
 import random
+import csv
+from datetime import date
 sys.path.append('.')
 from ui.colors import Style
 
@@ -31,9 +33,12 @@ class Jig:
             sys.stdout.write(Style.RESET)
             self.is_four_letter_prefix = bool(int(input('> ')))
             sys.stdout.write(Style.CYAN)
-            print('Would you like to use an apartment/flat line? [ 1:YES | 0:NO ]')
-            sys.stdout.write(Style.RESET)
-            self.is_2nd_line = bool(int(input('> ')))
+            if self.door_number_bool == False:
+                print('Would you like to use an apartment/flat line? [ 1:YES | 0:NO ]')
+                sys.stdout.write(Style.RESET)
+                self.is_2nd_line = bool(int(input('> ')))
+            else:
+                self.is_2nd_line = 0
         except ValueError:
             sys.stdout.write(Style.RED)
             print('Please enter a number...')
@@ -106,7 +111,7 @@ class Jig:
             self.suffix_array = ['ln','lan','lne','lane','lanee','llane','laane']
             
         elif self.suffix == 'road':
-            self.suffix_array = ['rd','roa','road','roadd','raod','rooad','rroad','rroaad','roaad']
+            self.suffix_array = ['rd','roa','road','roadd','raod','rroad','rooad','roaad']
            
         elif self.suffix == 'street':
             self.suffix_array = ['st','street','strt','streett','streeet','sstreet','sstreett','stt']
@@ -145,33 +150,74 @@ class Jig:
             street_suffix = street_suffix+'.'
         elif roll == 4:
             pass
-        return_street_name = self.street_name +' '+ street_suffix
+        if len(self.street_name.split(' ')) > 1:
+            return_street_name = self.street_name + street_suffix
+        else:
+            return_street_name = self.street_name +' '+ street_suffix
 
         return return_street_name
+
+    def _output_addresses_to_csv(self):
+        sys.stdout.write(Style.CYAN)
+        
+        output_day = date.today().strftime("%b-%d-%Y")
+        fname = f'output/{self.street_name}{self.suffix}{output_day}.csv'
+        with open(fname,'w',newline='') as new_address_csv:
+            address_writer = csv.writer(new_address_csv, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            counter = 1
+            total = len(self.addresses)
+            for address in self.addresses:
+                timestamp = time.strftime('%H:%M:%S')
+                print(f'[{timestamp}] WRITTEN [{counter}/{total}]')
+                address_writer.writerow(address)
+                counter+=1
+        sys.stdout.write(Style.GREEN)
+        timestamp = time.strftime('%H:%M:%S')
+        print(f'[{timestamp}] DONE, RETURNING TO MAIN MENU...')
+        time.sleep(1)
+        import main
+        main.main_wrapper()
 
     def _gen_addy(self):
         sys.stdout.write(Style.MAGENTA)
         counter = 1
-        while counter <= self.amount_of_addresses:
-            house_number = self._create_house_number()
-            street = self._gen_street_name()
-            if self.is_2nd_line == True:
-                line_2 = self._gen_2nd_line()
-            else:
-                line_2 = ''
-            address = (street,house_number,line_2)
-            if address not in self.addresses:
-                self.addresses.append(address)
-                timestamp = time.strftime('%H:%M:%S')
-                print(f'[{timestamp}] GENERATED {counter}/{self.amount_of_addresses}')
-                counter+=1
-            else:
-                pass
-        sys.stdout.write(Style.RESET)
-        for i in self.addresses:
-           print(f'{i}\n')
-        print(len(self.addresses))
+        try:
+            while counter <= self.amount_of_addresses:
+                house_number = self._create_house_number()
+                street = self._gen_street_name()
+                if self.is_2nd_line == True:
+                    line_2 = self._gen_2nd_line()
+                else:
+                    line_2 = self.door_number
+                address = (street,house_number,line_2)
+                if address not in self.addresses:
+                    self.addresses.append(address)
+                    timestamp = time.strftime('%H:%M:%S')
+                    print(f'[{timestamp}] GENERATED {counter}/{self.amount_of_addresses}')
+                    counter+=1
+                else:
+                    pass
+            sys.stdout.write(Style.GREEN)
+            timestamp = time.strftime('%H:%M:%S')
+            print(f'[{timestamp}] DONE GENERATING')
+            self._output_addresses_to_csv()
+        except KeyboardInterrupt:
+            Jig.failsafe(self)
         
+        
+    @staticmethod
+    def failsafe(self):
+        sys.stdout.write(Style.RED)
+        print('Would you like to save to csv before exiting? [ 1:YES | 0:NO ]')
+        sys.stdout.write(Style.RESET)
+        choice = int(input('> '))
+        if choice == 1:
+            self._output_addresses_to_csv()
+        elif choice == 0:
+            sys.exit()
+        else:
+            sys.stdout.write(Style.RED)
+            print('Please type a valid option...')
 
         
     
