@@ -14,7 +14,7 @@ from tools_functions.mail_functions import Mail
 def start():
     options_exit = False
     menu.print_main_menu()
-    WWYLTD = input('What would you like to do? [ 1: Start | 2: Manage Credentials | 0: Exit ]\n> ')
+    WWYLTD = input('What would you like to do? [ 1: Start Scraping Email | 2: Manage Credentials | 3: Generate Addresses | 0: Exit ]\n> ')
     if str(WWYLTD) == '0':
         options_exit = True
         while options_exit == True:
@@ -30,6 +30,8 @@ def start():
         return 1
     elif str(WWYLTD) == '2':
         return 2
+    elif str(WWYLTD) == '3':
+        return 3
 
 def main_wrapper():
     os.system('cls')
@@ -54,8 +56,12 @@ def main_wrapper():
             sys.stdout.write(Style.RESET)
             os.system('cls')
             main_wrapper()
+    
     elif start_running == 2:
         menu.set_defalut_menu()
+    
+    elif start_running == 3:
+        menu.auto_jig_menu()
 
 if __name__ == '__main__':
     main_wrapper()

@@ -376,7 +376,7 @@ class Mail():
         return stripped_lines
 
     def display_senders(self):
-        return [f"{self.senders.index(name)} : {name}  " for name in self.senders]
+        return [f"{self.senders.index(name)} : {name} " for name in self.senders]
 
     @staticmethod
     def scrape_email(raw):
