@@ -111,7 +111,7 @@ class Jig:
             self.suffix_array = ['ln','lan','lne','lane','lanee','llane','laane']
             
         elif self.suffix == 'road':
-            self.suffix_array = ['rd','roa','road','roadd','raod','rroad','rooad','roaad']
+            self.suffix_array = ['rd','roa','roaa','road','roadd','rdd','rroad','rooad','roaad','rrd']
            
         elif self.suffix == 'street':
             self.suffix_array = ['st','street','strt','streett','streeet','sstreet','sstreett','stt']

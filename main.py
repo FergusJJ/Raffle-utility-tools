@@ -1,16 +1,22 @@
-import imaplib, email, time, sys
-from termcolor import colored
-import art
+import imaplib
+import email
+import time
+import sys
+
 import datetime as dt
 import os
 from datetime import timezone
 import multiprocessing
 
-#
+#3rd party
+import art
+from termcolor import colored
+
+#Other imports
 from ui.colors import Style
 from ui.menus import Menu
 from tools_functions.mail_functions import Mail
-
+#
 def start():
     options_exit = False
     menu.print_main_menu()

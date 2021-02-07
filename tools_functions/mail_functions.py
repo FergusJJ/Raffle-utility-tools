@@ -254,6 +254,7 @@ class Mail():
         self.get_selected_sent_address()
 
         self.is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]\n> '))
+        
         if self.is_new_file == 0:
             output_directory = os.listdir('output/')
             if len(output_directory) == 0:
@@ -262,9 +263,14 @@ class Mail():
                 sys.stdout.write(Style.RESET)
                 self.is_new_file = 1
             elif len(output_directory) >= 2:
+                print('Task files found...')
+                sys.stdout.write(Style.RESET)
                 [print(f'{output_directory.index(files)} : {files}') for files in output_directory]
 
-                self.link_output_file = int(input('Please enter the number of the links file you would like to choose\n> '))
+                #self.link_output_file = int(input('Please enter the number of the links file you would like to choose\n> '))
+                sys.stdout.write(Style.YELLOW)
+                self.link_output_file = int(input('Please select the file(s) that you would like to run... [ "ALL" : start all ] \n> '))
+                sys.stdout.write(Style.RESET)
                 self.last_email_save_file = int(input('Please enter the number for the corresponding save file\n> '))
                 self.link_output_file = 'output/'+output_directory[self.link_output_file]
                 self.last_email_save_file = 'output/'+output_directory[self.last_email_save_file]

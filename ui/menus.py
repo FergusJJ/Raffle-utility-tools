@@ -21,7 +21,7 @@ class Menu:
 
     def print_main_menu(self):
         sys.stdout.write(Style.RED)
-        art.tprint('XntryScripts')
+        art.tprint('Scripts')
         sys.stdout.write(Style.RESET)
         print(f'{Menu.separator}\n')
 
