@@ -15,8 +15,11 @@ from termcolor import colored
 #Other imports
 from ui.colors import Style
 from ui.menus import Menu
-from tools_functions.mail_functions import Mail
+import tools_functions.mails_refactor as mail
 #
+
+
+
 def start():
     options_exit = False
     menu.print_main_menu()
@@ -40,34 +43,38 @@ def start():
         return 3
 
 def main_wrapper():
-    os.system('cls')
-    global menu
-    menu = Menu('main')
-    start_running = start()
-    if start_running == 1:
-        sys.stdout.write(Style.YELLOW)
+    try:
+        os.system('cls')
+        global menu
+        menu = Menu('main')
+        start_running = start()
+        if start_running == 1:
+            sys.stdout.write(Style.YELLOW)
 
         #Add the which provider optn when outlook is complete
         #which_provider = input('Which would you like to scrape? [ 1: Gmail | 2: Outlook ]\n> ')
         
-        which_provider = '1'
-        sys.stdout.write(Style.RESET)
-        if which_provider == '1':
-            menu.gmail_start_mail_menu()
-        elif which_provider == '2':
-            menu.outlook_start_mail_menu()
-        else:
-            sys.stdout.write(Style.RED)
-            print('That is not an option...')
+            which_provider = '1'
             sys.stdout.write(Style.RESET)
-            os.system('cls')
-            main_wrapper()
+            if which_provider == '1':
+                menu.gmail_start_mail_menu()
+            elif which_provider == '2':
+                menu.outlook_start_mail_menu()
+            else:
+                sys.stdout.write(Style.RED)
+                print('That is not an option...')
+                sys.stdout.write(Style.RESET)
+                os.system('cls')
+                main_wrapper()
     
-    elif start_running == 2:
-        menu.set_defalut_menu()
+        elif start_running == 2:
+            menu.set_defalut_menu()
     
-    elif start_running == 3:
-        menu.auto_jig_menu()
-
+        elif start_running == 3:
+            menu.auto_jig_menu()
+    except KeyboardInterrupt:
+        print("GOODBYE :)")
+        time.sleep(2)
+        sys.exit()
 if __name__ == '__main__':
     main_wrapper()

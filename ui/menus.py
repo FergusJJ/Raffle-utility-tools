@@ -1,15 +1,14 @@
 import imaplib, email, time, sys, json
+import tools_functions
 from termcolor import colored
 import art
-import datetime as dt
-import os
 from datetime import timezone
 import csv
 #
 sys.path.append('.')
 from ui.colors import Style
-from tools_functions.mail_functions import Mail
-from tools_functions.outlook_mail_functions import Outlook
+import tools_functions.mails_refactor as mail
+
 
 
 class Menu:
@@ -66,7 +65,6 @@ class Menu:
 
         communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
         print(communicate_choice_status)
-        gmail_mail_instance = Mail()
         
         try:
             print('['+Menu.timestamp+']'+' You Selected: '+gmail_email_address)
@@ -76,33 +74,9 @@ class Menu:
             print(setup_message+'\n')
             gmail_email_address = input('Enter your email\n> ')
             gmail_email_password = input('\nEnter your password\n> ')
+        mail.get_credentials(gmail_email_address,gmail_email_password,imap_url='imap.gmail.com')
         
-        gmail_mail_instance.get_mail_credentials(gmail_email_address,gmail_email_password,imap_url='imap.gmail.com')
     
-    def outlook_start_mail_menu(self):
-        with open('user_settings/outlook_defaults.json') as f:
-            data = json.load(f)
-            outlook_email_address = data["email_address"]
-            outlook_email_password = data["email_password"]
-        
-            
-
-        communicate_choice_status = colored('['+Menu.timestamp+']'+'You selected Mail Scripts\n',color='yellow')
-        print(communicate_choice_status)
-        outlook_mail_instance = Outlook()
-        
-        try:
-            print('['+Menu.timestamp+']'+' You Selected: '+outlook_email_address)
-        
-        except:
-            setup_message = colored('Note: You don\'t have a default email set up, to avoid having to re-type your credentials set one up from the start menu',color='red')
-            print(setup_message+'\n')
-            outlook_email_address = input('Enter your email\n> ')
-            outlook_email_password = input('\nEnter your password\n> ')
-        
-        outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='outlook.office365.com')#mail.outlook.com or outlook.office365.com
-        #outlook_mail_instance.get_mail_credentials(outlook_email_address,outlook_email_password,imap_url='imap-mail.outlook.com')
-
     def auto_jig_menu(self):
 
         sys.stdout.write(Style.YELLOW)
