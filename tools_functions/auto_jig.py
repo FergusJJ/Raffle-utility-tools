@@ -122,8 +122,15 @@ class Jig:
             sys.stdout.write(Style.RED)
             print('That is not supported, please enter your own options for suffixes & separate with commas [Eg: st,strt,street,etc]')
             sys.stdout.write(Style.RESET)
-            self.suffix_array = input('> ')
-            self.suffix_array = self.suffix_array.split(sep=',')
+            sys.stdout.write(Style.CYAN)
+            print('Would you like to leave street suffix unjigged? [ 1:YES || 0:NO ]')
+            sys.stdout.write(Style.RESET)
+            use_1_suffix = bool(int(input('> ')))
+            if use_1_suffix:
+                self.suffix_array = [f"{self.suffix}"]
+            else:
+                self.suffix_array = input('> ')
+                self.suffix_array = self.suffix_array.split(sep=',')
 
     def _gen_2nd_line(self):
         line_2_upper = self.amount_of_addresses/2
@@ -156,8 +163,11 @@ class Jig:
         return temp_street_name
 
     def _gen_street_name(self):
-        upper_bound = len(self.suffix_array)-1
-        index = random.randrange(0,upper_bound)
+        if len(self.suffix_array) >1:
+            upper_bound = len(self.suffix_array)-1
+            index = random.randrange(0,upper_bound)
+        else:
+            index = 0
         street_suffix = self.suffix_array[index]
         length = len(street_suffix)
         roll = random.randrange(1,4)
@@ -169,6 +179,8 @@ class Jig:
             street_suffix = street_suffix+'.'
         elif roll == 4:
             pass
+        
+
         if self.jig_street_name:
             temp_street_name = self._jig_street_name()
         else:
