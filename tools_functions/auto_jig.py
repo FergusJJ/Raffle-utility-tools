@@ -78,7 +78,7 @@ class Jig:
         letter_2 = Jig.ALPHABET[letter_2]
         letter_3 = Jig.ALPHABET[letter_3]
         if self.is_four_letter_prefix == True:
-            four_letter_prefix = (letter_1+letter_2+letter_3).upper()
+            four_letter_prefix = (letter_1+letter_2+letter_3+ " ").upper()
         else:
             four_letter_prefix = ''
         house_num_final = four_letter_prefix+str(self.house_num)
