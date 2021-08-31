@@ -117,6 +117,7 @@ class Menu:
             if len(temp_line1_list)==2:
                 street_name = temp_line1_list[0]
             else:
+                
                 street_name = temp_line1_list[:-1]
                 strt = ''
                 for i in street_name:

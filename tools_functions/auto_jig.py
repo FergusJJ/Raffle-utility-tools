@@ -29,9 +29,13 @@ class Jig:
             sys.stdout.write(Style.RESET)
             self.amount_of_addresses = int(input('> '))
             sys.stdout.write(Style.CYAN)
-            print('Would you like to have a 4-letter jig in front of your house number? [ 1:YES | 0:NO ]')
+            print('Would you like to have a 3-letter jig in front of your house number? [ 1:YES | 0:NO ]')
             sys.stdout.write(Style.RESET)
             self.is_four_letter_prefix = bool(int(input('> ')))
+            sys.stdout.write(Style.CYAN)
+            print('Would you like to jig your street name? [ 1:YES | 0:NO ]')
+            sys.stdout.write(Style.RESET)
+            self.jig_street_name = bool(int(input('> ')))
             sys.stdout.write(Style.CYAN)
             if self.door_number_bool == False:
                 print('Would you like to use an apartment/flat line? [ 1:YES | 0:NO ]')
@@ -69,13 +73,12 @@ class Jig:
         letter_1 = random.randrange(1,26)
         letter_2 = random.randrange(1,26)
         letter_3 = random.randrange(1,26)
-        letter_4 = random.randrange(1,26)
+        
         letter_1 = Jig.ALPHABET[letter_1]
         letter_2 = Jig.ALPHABET[letter_2]
         letter_3 = Jig.ALPHABET[letter_3]
-        letter_4 = Jig.ALPHABET[letter_4]
         if self.is_four_letter_prefix == True:
-            four_letter_prefix = (letter_1+letter_2+letter_3+letter_4).upper()
+            four_letter_prefix = (letter_1+letter_2+letter_3).upper()
         else:
             four_letter_prefix = ''
         house_num_final = four_letter_prefix+str(self.house_num)
@@ -136,6 +139,22 @@ class Jig:
         line_2 = f'{line_2_prefix} {line_2_suffix}{alpha_suffix}'
         return line_2
 
+    def _jig_street_name(self):
+        
+        temp_street_name = self.street_name
+        if temp_street_name == "":
+            sys.stdout.write(Style.RED)
+            print("You don't have a street namer in within your master address file..")
+            sys.stdout.write(Style.RESET)
+        street_name_arr = []
+        for i in temp_street_name:
+            street_name_arr.append(i)
+        
+        duped_character = random.randrange(0,len(street_name_arr))
+        street_name_arr.insert(duped_character, street_name_arr[duped_character])
+        temp_street_name = "".join(street_name_arr)
+        return temp_street_name
+
     def _gen_street_name(self):
         upper_bound = len(self.suffix_array)-1
         index = random.randrange(0,upper_bound)
@@ -150,10 +169,14 @@ class Jig:
             street_suffix = street_suffix+'.'
         elif roll == 4:
             pass
-        if len(self.street_name.split(' ')) > 1:
-            return_street_name = self.street_name + street_suffix
+        if self.jig_street_name:
+            temp_street_name = self._jig_street_name()
         else:
-            return_street_name = self.street_name +' '+ street_suffix
+            temp_street_name = self.street_name
+        if len(self.street_name.split(' ')) > 1:
+            return_street_name = temp_street_name + street_suffix
+        else:
+            return_street_name = temp_street_name +' '+ street_suffix
 
         return return_street_name
 
@@ -184,6 +207,7 @@ class Jig:
         try:
             while counter <= self.amount_of_addresses:
                 house_number = self._create_house_number()
+
                 street = self._gen_street_name()
                 if self.is_2nd_line == True:
                     line_2 = self._gen_2nd_line()
