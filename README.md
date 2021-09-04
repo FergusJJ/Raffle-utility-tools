@@ -9,14 +9,14 @@ You are now able to save keywords within **frequent_senders.txt** so you don't h
 > Example:
 > _frequent_senders.txt_
 > this_email_needs_no_keyword@email.com:keyword_here
-> this_email_needs_a_keyword
+> this_email_needs_a_keyword@email.com
 If you don't specify a keyword by separating with a colon then you will be asked for one at runtime like before.
 
 
 
 ## How to install:
 
-If you don't already have python 3 installed then install it here: [Download](https://www.python.org/downloads/)
+If you don't already have python 3 installed then install it here: [Download](https://www.python.org/downloads/)\n
 Once you have python installed and have added pip to PATH ([How to add pip to PATH](https://appuals.com/fix-pip-is-not-recognized-as-an-internal-or-external-command/)) open up the command prompt and type in the following 2 commands:
 pip install art
 pip install termcolor
