@@ -95,6 +95,9 @@ class Jig:
         elif self.suffix == 'boulevard':
             self.suffix_array = ['blvd','boulevard','bvd','blvdd','boulevardd','bboulevard','booulevard']
 
+        elif self.suffix == 'calle':
+            self.suffix_array = ['Call','Cale','Clle','alle','Callee','Callle','Callle','Caalle','CCalle','Callr','Calld','Callf','Callw,','Calls','Cakle','Caile','Caole','Caple','Cakle','Caile','Caole','Caple','Cslle','Czlle','Cxlle','Cqlle','Cwlle']
+
         elif self.suffix == 'canyon':
             self.suffix_array = ['cyn','canyn','cnyn','canyon','canyn','canyonn','ccanyon','canyyon']
 
