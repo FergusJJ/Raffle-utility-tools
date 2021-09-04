@@ -174,8 +174,7 @@ def start_scraping():
     is_keyword_in_file = check_keyword(selected_email=search_criteria)
     print(search_criteria)
     if is_keyword_in_file:
-        search_criteria = current_options["SENDERS"][search_criteria].split(" ")[0].strip()
-        print(search_criteria)
+        search_criteria = current_options["SENDERS"][search_criteria].split(":")[0].strip()
     else:
         search_criteria = (current_options["SENDERS"][search_criteria]).strip()
     search_criteria = f'FROM "{search_criteria}" '
@@ -300,9 +299,10 @@ def get_selected_sent_address() -> int:
             return search_criteria
 
 def check_keyword(selected_email: int) -> bool:
-    selected_line_list = current_options["SENDERS"][selected_email].split(" ")
+    selected_line_list = current_options["SENDERS"][selected_email].split(":")
     if len(selected_line_list) > 1:
         current_options["SUBSTR"] = selected_line_list[1].strip()
+        
         return True
     else:
         current_options["SUBSTR"] = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))

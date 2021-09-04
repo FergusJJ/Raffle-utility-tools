@@ -1,1 +1,1 @@
-someemail@email.com example_keyword
+someemail@email.com:example_keyword
