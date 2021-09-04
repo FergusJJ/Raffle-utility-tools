@@ -92,7 +92,6 @@ def get_gmail_inbox():
         current_options["SELECTED_INBOX"] = inbox_options["DRAFTS"]
     elif inbox_choice == '5':
         current_options["SELECTED_INBOX"] = inbox_options["SENT"]
-    current_options["SUBSTR"] = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
     get_date()
     start_scraping()
 
@@ -142,6 +141,7 @@ def start_scraping():
     sys.stdout.write(Style.RESET)
     #
     search_criteria = get_selected_sent_address()
+    
     #
     is_new_file = int(input('Would you link to create a new file to save links to [ 1: Yes | 0: No ]\n> '))
     if is_new_file == 0:
@@ -171,7 +171,13 @@ def start_scraping():
         with open(last_email_save_file,'w') as save_file:
             save_file.close()
     sys.stdout.write(Style.RESET)
-    search_criteria = (current_options["SENDERS"][search_criteria]).strip()
+    is_keyword_in_file = check_keyword(selected_email=search_criteria)
+    print(search_criteria)
+    if is_keyword_in_file:
+        search_criteria = current_options["SENDERS"][search_criteria].split(" ")[0].strip()
+        print(search_criteria)
+    else:
+        search_criteria = (current_options["SENDERS"][search_criteria]).strip()
     search_criteria = f'FROM "{search_criteria}" '
     search_criteria_2 = f'SINCE "{current_options["SENT_SINCE_DATE"]}"'
     criteria = search_criteria+search_criteria_2
@@ -277,9 +283,10 @@ def scrape_link_from_email(substring_filter,last_email_save_file,link_output_fil
                # self.FILTERED_LINKS = []
 
 
-def get_selected_sent_address():
+def get_selected_sent_address() -> int:
         current_options["SENDERS"] = read_frequent_senders()
-        #
+        
+        
         list_of_senders_addresses = display_senders()
         print(list_of_senders_addresses)
         sys.stdout.write(Style.RESET)
@@ -291,6 +298,17 @@ def get_selected_sent_address():
             get_selected_sent_address()
         else:
             return search_criteria
+
+def check_keyword(selected_email: int) -> bool:
+    selected_line_list = current_options["SENDERS"][selected_email].split(" ")
+    if len(selected_line_list) > 1:
+        current_options["SUBSTR"] = selected_line_list[1].strip()
+        return True
+    else:
+        current_options["SUBSTR"] = str(input('Which substring filter would you like to search for?(CASE SENSITIVE)\n> '))
+        return False
+    
+
 
 def display_senders():
      return [f"{current_options['SENDERS'].index(name)} : {name} " for name in current_options["SENDERS"]]
