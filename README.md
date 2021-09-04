@@ -16,11 +16,16 @@ If you don't specify a keyword by separating with a colon then you will be asked
 
 ## How to install:
 
-If you don't already have python 3 installed then install it here: [Download](https://www.python.org/downloads/)\n
+If you don't already have python 3 installed then install it here: [Download](https://www.python.org/downloads/)
+
 Once you have python installed and have added pip to PATH ([How to add pip to PATH](https://appuals.com/fix-pip-is-not-recognized-as-an-internal-or-external-command/)) open up the command prompt and type in the following 2 commands:
+
 pip install art
+
 pip install termcolor
 
 Now you can download the zip file and unzip it.
+
 Open up the command prompt one more time and navigate to the folder which contains **main.py**
+
 Type "**python main.py**" and the program will start 
