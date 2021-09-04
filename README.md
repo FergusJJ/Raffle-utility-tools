@@ -8,8 +8,10 @@ Probably still a few bugs but I doubt I'll work on this further since it suits m
 You are now able to save keywords within **frequent_senders.txt** so you don't have to re-enter one every time.
 > Example:
 > _frequent_senders.txt_
+
 > this_email_needs_no_keyword@email.com:keyword_here
 > this_email_needs_a_keyword@email.com
+
 If you don't specify a keyword by separating with a colon then you will be asked for one at runtime like before.
 
 
