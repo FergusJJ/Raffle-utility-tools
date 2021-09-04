@@ -10,7 +10,10 @@ You are now able to save keywords within **frequent_senders.txt** so you don't h
 > _frequent_senders.txt_
 
 > this_email_needs_no_keyword@email.com:keyword_here
+
 > this_email_needs_a_keyword@email.com
+
+>_end of file_
 
 If you don't specify a keyword by separating with a colon then you will be asked for one at runtime like before.
 
