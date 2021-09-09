@@ -4,7 +4,7 @@ Probably still a few bugs but I doubt I'll work on this further since it suits m
 **Installation guide at the bottom**
 
 ### Tips:
-**Raffle-Utility-Tools-Main\user_settings** is where you can save your addresses & emails.
+**Raffle-Utility-Tools-Main\user_settings** is where you can save your addresses & emails. 
 You are now able to save keywords within **frequent_senders.txt** so you don't have to re-enter one every time.
 > Example:
 > _frequent_senders.txt_
